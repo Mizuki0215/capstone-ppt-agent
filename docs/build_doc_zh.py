@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from docx import Document
 from docx.shared import Pt, Cm, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -126,11 +128,14 @@ para("第二個問題之所以重要，是因為失敗並不細微。文字框�
 heading("2. 現時的做法")
 para("這個領域的工作大致分成兩類，旁邊長出一套評測文獻。")
 para("生成。PPTAgent 把做 deck 視為編輯而非撰寫：分析參考簡報、抽出 slide 層級的 schema、輸出編輯動作。SlideGen、SlideLab、ArcDeck "
-     "加上敘事規劃與多模態接地。這些系統產出的 deck 有說服力，在盲測偏好上可與商業工具競爭。")
+     "加上敘事規劃與多模態接地。這些系統產出的 deck 有說服力，在盲測偏好上可與商業工具競爭。"
+     "X+Slides 更把聽眾當作明確的條件輸入，而不是常數（Chen et al., 2026）。")
 para("修復。ReDeck 把修訂拆成原子編輯動作，每步之後取回 renderer 的觀測。PPTPilot（隨 PPTArena 提出）跑 plan–edit–check 迴圈，"
-     "由視覺語言模型判斷結果。SLIDEFORGE 把 slide 保持為結構化物件，令編輯不破壞原生可編輯性。")
+     "由視覺語言模型判斷結果。SLIDEFORGE 把 slide 保持為結構化物件，令編輯不破壞原生可編輯性。"
+     "DeepPresenter 再以環境接地的反思延伸這條迴圈（Zheng et al., 2026a）。")
 para("評測。SlideAudit（UIST '25）提供 27 類版面缺陷的分類法，涵蓋 2,400 張已標註 slide。DECKBench（KDD '26）以參考 deck 作比對，"
-     "用相似度指標加 LLM judge 評分。PresentBench 用細緻的 rubric 評生成品質。")
+     "用相似度指標加 LLM judge 評分。PresentBench 用細緻的 rubric 評生成品質。"
+     "PPTBench 問的是另一個問題——模型到底懂不懂版面與設計（Huang et al., 2025）。")
 
 table(["工作", "提供什麼", "仍未解決"],
       [["PPTAgent, SlideGen, SlideLab", "強生成器；敘事規劃", "輸出是否可用；局部失敗"],
@@ -141,7 +146,7 @@ table(["工作", "提供什麼", "仍未解決"],
 
 # ---------------- 3 ----------------
 heading("3. 好在哪裡，差在哪裡")
-para("三件事真的解決了。Deck 看起來像真：版面穩定、風格一致。輸出的可編輯性提升，因為工作已進入 .pptx 物件層。"
+para("三件事真的解決了。Deck 看起來像真：版面穩定、風格一致。輸出的可編輯性提升，因為工作已進入 .pptx 物件層；PosterMELD 在壁報上展示同一個轉向，輸出可印刷、可編輯的成品（Hu et al., 2026）。"
      "評測亦由整體打分成熟到任務式量度——只用成品答問題，或用明確準則判斷可用性。")
 para("四件事仍未解決。")
 bullet("歸因缺失。ReDeck 與 PPTPilot 都跑修復迴圈，但都沒有報「哪一類缺陷對修復有反應、哪一類沒有」。deck 層面升十分，只告訴我們迴圈有用，沒告訴我們用在哪裡。")
@@ -205,31 +210,36 @@ para("兩個檢查在主要研究之前執行，因為任何一個失敗都會�
      "人手做的 deck 高於 PPTAgent，高於 naive pipeline。如果人手 deck 不是最高分，就是 gate 定義有誤，必須在任何迴圈開跑之前修訂。"
      "收斂效度問：SRR 是否跟隨人類偏好。該相關性會預先註冊，無論結果如何都會報告。")
 
+para("技術棧跟隨 brief：PyMuPDF 負責解析與裁圖、python-pptx 輸出原生可編輯檔、Streamlit 作示範前端、開發期間用 CodeBuddy 作 agent harness。")
 para("有兩處刻意偏離 brief 建議的時間表。第一，brief 把「檢查」放在第 5 階段（第 12–14 週）；本項目提前到第 5 週，因為指標必須先驗證，"
      "依賴它的迴圈才建得穩。第二，brief 第 6 階段列明比較六個維度：accuracy、coverage、readability、design、latency、cost。"
      "其中 coverage——論文的重點有幾多留在 deck 裡——會獨立量度，每篇標註五至八個 claim，令六個維度全部有數。")
 table(["週", "工作流", "交付", "里程碑"],
-      [["W1–2", "範圍與文獻", "38 篇已讀；缺口確定", "Proposal：11 月 5 日"],
-       ["W3–4", "環境與 spike", "解析與渲染可用", "Workshop 1：11 月 9 日"],
-       ["W5–7", "Rulebook 與 detector", "六個 gate；40 張校準", "區辨效度檢查"],
-       ["W8–11", "版面與渲染", "修復動作；110 張測試集", "首次 SRR 比較"],
-       ["W12–14", "校準與迴圈", "掃描凍結；迴圈收斂", "Interim：2027 年 1 月 7 日"],
-       ["W15–18", "實驗與人評", "消融；20 人研究", "偏好相關性"],
-       ["W19–20", "報告與示範", "報告、demo、slides", "Final：4 月 8 日；簡報 4 月 9–21 日"]],
-      [2.4, 4.4, 6.0, 4.4], cap="表 4. 對照大學時間表的排程。")
+      [["W1–2　10/26–11/8", "範圍與文獻", "38 篇已讀；缺口確定", "Proposal：11 月 5 日"],
+       ["W3–4　11/9–11/22", "環境與 spike", "解析與渲染可用", "Workshop 1：TBC（≈11 月 9 日）"],
+       ["W5–7　11/23–12/13", "Rulebook 與 detector", "六個 gate；40 張校準", "區辨效度檢查"],
+       ["W8–11　12/14–1/17", "版面與修復", "修復動作；110 張測試集", "Interim：2027 年 1 月 7 日"],
+       ["W12–14　1/18–2/7", "校準與迴圈", "掃描凍結；迴圈收斂", "首次 SRR 比較"],
+       ["W15–18　2/8–3/7", "實驗與人評", "消融；20 人研究", "偏好相關性"],
+       ["W19–21　3/8–3/28", "報告與示範", "報告、demo、slides 初稿", "指導老師審閱"],
+       ["W22–23　3/29–4/8", "最後定稿", "最終報告、demo、slides", "Final：4 月 8 日；簡報 4 月 9–21 日"]],
+      [3.6, 3.6, 5.2, 4.0],
+      cap="表 4. 對照大學時間表的排程。週次由 2026 年 10 月 26 日起算；到最後提交實際是 23 週，不是 brief 建議的 20 週。")
 
 # ---------------- 8 ----------------
 heading("8. 聲明")
 para("本文件在撰寫與程式碼生成上使用了生成式 AI 工具。所有設計決定、指標定義、評測協議、標註與分析，均為作者本人所做。"
-     "所用工具及其使用程度記錄於日誌，連同報告一併提交，符合大學的生成式 AI 使用指引。")
+     "所用工具及其使用程度記錄於日誌，連同報告一併提交，符合大學的生成式 AI 使用指引。本文件亦作為最終提交的 AI 報告的基礎。")
 
 # ---------------- refs ----------------
 heading("References")
 refs = [
  "Chen, H., Zhou, X., Zhou, W., et al. (2026). X+Slides: Benchmarking audience-conditioned slide generation. arXiv:2606.19256.",
+ "Chen, X.-S., Zhu, J., Li, P.-L., Wang, H., & Guo, M.-H. (2026). PresentBench: A fine-grained rubric-based benchmark for slide generation. arXiv:2603.07244.",
  "Hu, H., Dang, C., Liu, Y., et al. (2026). PosterMELD: Multi-agent paper-to-poster generation with editable print-ready outputs. arXiv:2608.02218.",
  "Huang, Z., Liu, X., Hu, T., Zhang, K., & Liu, Y. (2025). PPTBench: Holistic evaluation of LLMs for PowerPoint layout and design understanding. arXiv:2512.02624.",
  "IEEE Nanotechnology Materials and Devices Conference. (2021). Presentation preparation guidelines and requirements. https://ieeenmdc.org/past-conferences/nmdc-2021/call-for-papers/presentation-preparation-guidelines-and-requirements/",
+ "Liang, X., Zhang, Z., Zhang, X., Su, H., Xu, Y., Sun, S., & You, C. (2025). SlideGen: Collaborative multimodal agents for scientific slide generation. arXiv:2512.04529.",
  "Jang, D., Heisler, M. L., Xing, L., et al. (2026). DECKBench: Benchmarking multi-agent frameworks for academic slide generation and editing. arXiv:2602.13318.",
  "Ofengenden, M., Man, Y., Pang, Z., Gui, L.-Y., & Wang, Y.-X. (2025). PPTArena: A benchmark for PowerPoint editing. arXiv:2512.03042.",
  "Ozden, T. C., VS, S., Horoz, F., et al. (2026). Narrative-driven paper-to-slide generation via ArcDeck. arXiv:2604.11969.",
@@ -248,6 +258,6 @@ for ref in refs:
     p.paragraph_format.space_after = Pt(3)
     r = p.add_run(ref); r.font.size = Pt(8.4); r.font.color.rgb = INK
 
-out = "/Users/yeetungchan/Documents/deepseek-harness/default-workspace/capstone-ppt-agent/docs/Proposal_Background_and_Plan_ZH.docx"
+out = str(Path(__file__).resolve().parent / "Proposal_Background_and_Plan_ZH.docx")
 doc.save(out)
 print("saved", out)

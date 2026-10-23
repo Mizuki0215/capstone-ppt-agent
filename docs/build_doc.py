@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from docx import Document
 from docx.shared import Pt, Cm, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -131,12 +133,15 @@ heading("2. How this is done today")
 para("Work in this area has settled into two families, with an evaluation literature growing alongside them.")
 para("Generation. PPTAgent treats deck creation as editing rather than authoring: it analyses reference presentations, extracts slide-level schemas, "
      "and emits edit actions. SlideGen, SlideLab and ArcDeck add narrative planning and multimodal grounding. These systems produce convincing decks, "
-     "and on blind preference tests they are competitive with commercial tools.")
+     "and on blind preference tests they are competitive with commercial tools. X+Slides makes the audience an explicit "
+     "conditioning input rather than a constant (Chen et al., 2026).")
 para("Repair. ReDeck decomposes revision into atomic edit actions and returns a renderer-derived observation after each one. PPTPilot, introduced with "
      "PPTArena, runs a plan-edit-check loop in which a vision-language model judges the result. SLIDEFORGE keeps slides as structured artefacts so that "
-     "edits preserve native editability.")
+     "edits preserve native editability. DeepPresenter extends the loop with environment-grounded reflection "
+     "(Zheng et al., 2026a).")
 para("Evaluation. SlideAudit (UIST '25) provides an expert taxonomy of 27 slide design flaws over 2,400 annotated slides. DECKBench (KDD '26) scores "
-     "decks against reference decks with similarity metrics and an LLM judge. PresentBench scores generation with fine-grained rubrics.")
+     "decks against reference decks with similarity metrics and an LLM judge. PresentBench scores generation with fine-grained rubrics. "
+     "PPTBench asks a different question - whether a model understands layout and design at all (Huang et al., 2025).")
 table(
     ["Work", "Provides", "Leaves open"],
     [["PPTAgent, SlideGen, SlideLab", "Strong generators; narrative planning", "Whether the output is usable; local failures"],
@@ -148,7 +153,8 @@ table(
 # ============================ 3 GOOD / BAD ============================
 heading("3. What is good, and what is not")
 para("Three things are genuinely solved. Decks look convincing: layout is stable and styling consistent. Output is increasingly editable, because work has "
-     "moved into the .pptx object layer. And evaluation has matured from holistic scores to task-based measures — answering questions using only the "
+     "moved into the .pptx object layer; PosterMELD shows the same shift for posters, emitting print-ready, editable artefacts "
+     "(Hu et al., 2026). And evaluation has matured from holistic scores to task-based measures — answering questions using only the "
      "artefact, or gating readiness on explicit criteria.")
 para("Four things are not.")
 bullet("Attribution is missing. ReDeck and PPTPilot both run repair loops, but neither reports which class of defect responded to repair and which did not. "
@@ -224,34 +230,41 @@ para("Two checks run before the main study, because a failure in either invalida
      "should — human-made decks above PPTAgent above a naive pipeline. If human decks do not score highest, the gates are mis-specified and must be revised "
      "before any loop is run. Convergent validity asks whether SRR tracks human preference; that correlation is pre-registered, and it will be reported whether "
      "or not it holds.")
+para("The stack follows the brief: PyMuPDF for parsing and figure extraction, python-pptx for native, editable output, a Streamlit front end for the demonstration, and CodeBuddy as the agent harness during development.")
 para("Two departures from the brief's suggested schedule are deliberate. The brief places inspection in stage 5, weeks 12 to 14; this project begins it in week 5, "
      "because the metric has to be validated before the loop that depends on it is built. Second, the brief's stage 6 comparison names accuracy, coverage, "
      "readability, design, latency and cost. Coverage — whether the paper's key claims survive into the deck — is measured explicitly, with five to eight claims "
      "annotated per paper, so that all six dimensions are reported.")
 table(
     ["Weeks", "Stream", "Deliverable", "Milestone"],
-    [["W1–2", "Scope and literature", "38 papers reviewed; gap fixed", "Proposal due 5 Nov 2026"],
-     ["W3–4", "Environment and spikes", "Parse and render working", "Workshop 1, 9 Nov"],
-     ["W5–7", "Rulebook and detectors", "Six gates; 40-slide calibration", "Discriminative validity check"],
-     ["W8–11", "Layout and rendering", "Repair actions; 110-slide test set", "First SRR comparison"],
-     ["W12–14", "Calibration and loop", "Sweeps frozen; loop converged", "Interim report, 7 Jan 2027"],
-     ["W15–18", "Experiments and study", "Ablation; 20-participant study", "Preference correlation"],
-     ["W19–20", "Report and demonstration", "Report, demo, slides", "Final, 8 Apr 2027; presentation 9–21 Apr"]],
-    [2.3, 4.3, 6.2, 4.4], cap="Table 4. Schedule against the University timeline.")
+    [["W1–2  26 Oct – 8 Nov", "Scope and literature", "38 papers reviewed; gap fixed", "Proposal due 5 Nov 2026"],
+     ["W3–4  9 – 22 Nov", "Environment and spikes", "Parse and render working", "Workshop 1, TBC (≈9 Nov)"],
+     ["W5–7  23 Nov – 13 Dec", "Rulebook and detectors", "Six gates; 40-slide calibration", "Discriminative validity check"],
+     ["W8–11  14 Dec – 17 Jan", "Layout and repair", "Repair actions; 110-slide test set", "Interim report, 7 Jan 2027"],
+     ["W12–14  18 Jan – 7 Feb", "Calibration and loop", "Sweeps frozen; loop converged", "First SRR comparison"],
+     ["W15–18  8 Feb – 7 Mar", "Experiments and study", "Ablation; 20-participant study", "Preference correlation"],
+     ["W19–21  8 – 28 Mar", "Report and demonstration", "Report, demo, slide draft", "Supervisor review"],
+     ["W22–23  29 Mar – 8 Apr", "Finalisation", "Final report, demo, slides", "Final, 8 Apr 2027; presentations 9–21 Apr"]],
+    [3.5, 3.7, 5.2, 4.0],
+    cap="Table 4. Schedule against the University timeline. Weeks are counted from 26 Oct 2026; the run to the final "
+        "submission is 23 weeks, not the 20 in the brief's suggested plan.")
 
 # ============================ 8 DISCLOSURE ============================
 heading("8. Disclosure")
 para("Generative AI tools were used for drafting and for code generation. All design decisions, the metric definitions, the evaluation protocol, the annotation "
      "and the analysis are the author's. The tools used and the extent of their use are recorded in a log, submitted with the report in line with the University's "
-     "student guide on the use of GenAI.")
+     "student guide on the use of GenAI. This document also forms the basis of the separate AI report submitted with the "
+     "final report.")
 
 # ============================ REFERENCES ============================
 heading("References")
 refs = [
  "Chen, H., Zhou, X., Zhou, W., et al. (2026). X+Slides: Benchmarking audience-conditioned slide generation. arXiv:2606.19256.",
+ "Chen, X.-S., Zhu, J., Li, P.-L., Wang, H., & Guo, M.-H. (2026). PresentBench: A fine-grained rubric-based benchmark for slide generation. arXiv:2603.07244.",
  "Hu, H., Dang, C., Liu, Y., et al. (2026). PosterMELD: Multi-agent paper-to-poster generation with editable print-ready outputs. arXiv:2608.02218.",
  "Huang, Z., Liu, X., Hu, T., Zhang, K., & Liu, Y. (2025). PPTBench: Holistic evaluation of LLMs for PowerPoint layout and design understanding. arXiv:2512.02624.",
  "IEEE Nanotechnology Materials and Devices Conference. (2021). Presentation preparation guidelines and requirements. https://ieeenmdc.org/past-conferences/nmdc-2021/call-for-papers/presentation-preparation-guidelines-and-requirements/",
+ "Liang, X., Zhang, Z., Zhang, X., Su, H., Xu, Y., Sun, S., & You, C. (2025). SlideGen: Collaborative multimodal agents for scientific slide generation. arXiv:2512.04529.",
  "Jang, D., Heisler, M. L., Xing, L., et al. (2026). DECKBench: Benchmarking multi-agent frameworks for academic slide generation and editing. arXiv:2602.13318.",
  "Ofengenden, M., Man, Y., Pang, Z., Gui, L.-Y., & Wang, Y.-X. (2025). PPTArena: A benchmark for PowerPoint editing. arXiv:2512.03042.",
  "Ozden, T. C., VS, S., Horoz, F., et al. (2026). Narrative-driven paper-to-slide generation via ArcDeck. arXiv:2604.11969.",
@@ -270,6 +283,6 @@ for ref in refs:
     p.paragraph_format.space_after = Pt(3)
     r = p.add_run(ref); r.font.size = Pt(8.4); r.font.color.rgb = INK
 
-out = "/Users/yeetungchan/Documents/deepseek-harness/default-workspace/capstone-ppt-agent/docs/Proposal_Background_and_Plan.docx"
+out = str(Path(__file__).resolve().parent / "Proposal_Background_and_Plan.docx")
 doc.save(out)
 print("saved", out)
