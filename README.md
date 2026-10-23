@@ -21,6 +21,7 @@ signal, plus a study of what that measurement is worth.
 |---|---|
 | Pipeline (parse → compose → render) | working; 2 papers rendered end-to-end |
 | Generation layer | heuristic only; LLM stages designed in `docs/llm_plan.md`, not yet built |
+| Selection | `src/schema.py` — requirement + rule table + claim-level 1/0, 38 tests green |
 | Detector | **4 of 6 gates** — G1 containment, G2 overlap, G3 font size, G6 density |
 | Gates still missing | **G4 contrast** (WCAG 2.2 AA), **G5 text fit** (rendered height) |
 | First measurement | `build/detect_v1.json` — DOC2PPT, 9 slides, 0 clean, SRR 0.0 |
@@ -28,7 +29,7 @@ signal, plus a study of what that measurement is worth.
 | Test set, labels, baselines, human study | not started |
 | Proposal | EN + ZH, DOCX + PDF, 6 pp |
 
-Plan: **[WBS.md](WBS.md)** (93 jobs, 208 h) · generation layer: **[docs/llm_plan.md](docs/llm_plan.md)**
+Plan: **[WBS.md](WBS.md)** (98 jobs, 216 h) · generation layer: **[docs/llm_plan.md](docs/llm_plan.md)**
 
 ## Layout
 
@@ -38,6 +39,7 @@ src/
   compose.py    outline + bullets + speaker notes         (stdlib; --llm optional)
   render.py     plan → editable .pptx with notes          (python-pptx)
   detect.py     gate checks straight off the object model (v1: G1 G2 G3 G6)
+  schema.py     requirement / section type / claim, and the selection rule table
 build/          intermediate JSON (deck.json, plan.json, detect_v1.json)
 out/            rendered decks
 docs/           proposal EN/ZH (.docx/.pdf) + the scripts that build them
@@ -45,7 +47,7 @@ research/       literature: 35 indexed papers, notes; PDFs are not committed
 deck/           proposal deck builder and its outputs
 rulebook.md     the violation rulebook — every gate as a decision procedure
 scripts/        fetch_papers.py — rebuild the paper corpus from arXiv ids
-WBS.md          work breakdown, 93 jobs, 22-week calendar
+WBS.md          work breakdown, 98 jobs, 22-week calendar
 docs/llm_plan.md   how outline → bullets → speaker notes are generated
 ```
 
@@ -59,6 +61,7 @@ interpreters, which is why `run.sh` takes both paths.
 ./run.sh path/to/paper.pdf --llm                        # let a model rewrite bullets/notes
 
 python3 src/detect.py out/PPTAgent_2501.03936.pptx --json build/detect_v2.json
+python3 -m pytest                                                # 38 tests
 ```
 
 Current scope is deliberately narrow: **single-column English papers**, 10–12

@@ -98,6 +98,20 @@
 
 > **A1 / A2 的文字必須 byte-identical**：A2 讀 A1 的 cache，只跑 repair。否則「A2 − A1 = inspection 的貢獻」唔成立，而呢個差值就係全份論文的主結果。
 
+### P1c｜選段（requirement + 規則表）(W3–4，與 P1/P1b 並行）— 8.0 h
+
+設計見 [`docs/plan_selection.md`](docs/plan_selection.md)。LLM 只出 requirement 表；1/0 由規則表決定，逐條可追 rule id。
+
+| ID | Job | 產出 | 驗收 | h | Dep |
+|---|---|---|---|---|---|
+| Q1 | requirement / claim / section type 詞彙 | `src/schema.py` | fail-closed：未知值報錯而唔猜 | 1.5 | — |
+| Q2 | 規則表 + 硬性規則 + 測試 | `tests/test_schema.py` | 38 個測試綠 | 1.5 | Q1 |
+| Q3 | 自由文字 → requirement 表（LLM ×1） | `src/llm/requirement.py` | 5 個寫法都出到合法表，唔得就報錯 | 1.5 | Q1, L2 |
+| Q4 | 接上 claim → select → outline | `src/select_run.py` | 每篇出到 decision 表（含 rule id） | 2.0 | Q2, L3 |
+| Q5 | 寬鬆 / 嚴格兩版規則表掃描 | `docs/selection_sweep.md` | 結論在兩版都成立 | 1.5 | Q4 |
+
+> `DEFAULT_REQ = (12 min, expert)` 凍結：**所有實驗臂用同一個 requirement**；adaptive request 只入 demo，唔入 RQ。
+
 ### P2｜W1 量度（W5–7，11/23 – 12/13）— 41.5 h
 
 **前半：把 rulebook 由 v0 凍結成 v1（20 條決定）**
@@ -234,14 +248,15 @@ P2.1–P2.7 (rulebook 凍結)
 | P0 提案 | 10/23 – 11/05 | 14.8 h | 17.8 |
 | P1 基礎 | W3–4 | 21.5 h | 25.8 |
 | P1b 生成層 (LLM) | W3–4 | 26.0 h | 31.2 |
+| P1c 選段 | W3–4 | 8.0 h | 9.6 |
 | P2 量度 | W5–7 | 41.5 h | 49.8 |
 | P3 維修 | W8–11 | 28.0 h | 33.6 |
 | P4 控制 | W12–14 | 14.0 h | 16.8 |
 | P5 證據 | W15–18 | 24.5 h | 29.4 |
 | P6 報告 | W19–22 | 38.0 h | 45.6 |
-| **總計** | 22 週 | **208.3 h** | **250.0 h** |
+| **總計** | 22 週 | **216.3 h** | **259.6 h** |
 
-`CATCHUP_PLAN.md` 假設 15–20 h/週 × 20 週 = 300–400 h。計劃用 250 h，**剩 50–150 h 係 buffer**，剛好覆蓋 figure 抽取重做同人評超時 —— 所以呢個 profile 係緊但有餘，唔需要再收窄 scope。
+`CATCHUP_PLAN.md` 假設 15–20 h/週 × 20 週 = 300–400 h。計劃用 259.6 h，**剩 40–140 h 係 buffer**，剛好覆蓋 figure 抽取重做同人評超時 —— 所以呢個 profile 係緊但有餘，唔需要再收窄 scope。
 
 ---
 
