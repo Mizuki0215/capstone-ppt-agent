@@ -224,3 +224,39 @@ proposal §5 寫得很白：「these are arithmetic, not judgements. A rule can 
 | | **合計** | | **6.0 h** |
 
 這 6 小時做的是**辯護**，不是取代：它用數據回答「你為什麼不用 ML」，而唔是用 ML 去回答一個唔需要 ML 的問題。要就加入 WBS 做 S-block（總工時 208.3 → 214.3 h）。
+
+---
+
+## 10. claims：LLM 直讀，不用 RAG（決策記錄 2026-10-23）
+
+問題：抽 claim 這一步，直接讓 LLM 讀該節，還是先做檢索再餵給它（RAG）？
+
+**決定：直讀。不建 vector store，不用 embedding，不做檢索。**
+
+### 為什麼
+
+| 理由 | 數字 |
+|---|---|
+| **要檢索的語料本來就塞得入 context** | 一節 ≈ 300–800 tokens；8 頁論文全文 ≈ 4–6k tokens。RAG 解決的是「context 裝不下」，這裡沒有這個問題 |
+| **RAG 會為文字層加入新的機率成分** | 檢索可能漏掉關鍵句 → claim 少了 → 下游 outline/coverage 全部受影響。而 A2 − A1 要乾淨，文字層的變數愈少愈好 |
+| **接地不是靠檢索，是靠事後的確定性錨定** | claim 回來之後用 token overlap 對回原文句，得 `sec3:s12`；對不上就丟（fail closed）。檢索只改變「模型看到什麼」，不保證「它講得對」——V1 數字檢查才是保證 |
+| **每個零件都要 sweep** | chunk size、embedding model、k 三個新參數 = 三個新掃描維度。20 週單人項目，不值得為一個不存在的問題加三個旋鈕 |
+
+### 真正要的三個機制（看起來像 RAG，其實不是）
+
+1. **結構化切塊**：`parse.py` 已按 section 切好。太長的 section 按 paragraph 做 map-reduce（map 逐段抽、reduce 合併去重），切法由結構決定，不是相似度。
+2. **事後錨定**：claim → 最相近原文句（token overlap），產生 evidence id。這是**歸因**，不是檢索。
+3. **跨節連結**：同一 claim 在 abstract 出現、在 results 有數據支撐，用同一套 overlap join 連起來。同樣不需要向量。
+
+### 什麼情況才值得回頭用 RAG（目前全部在 scope 外）
+
+- 處理 100 頁以上的論文或整本書 —— 那時 context 真的裝不下。
+- 要判斷「這篇論文與既有文獻是否一致」—— 屬於 claim correctness，proposal 第 6 節已列為 scope 外。
+- 想用類似 annotated claim 做 few-shot exemplar 檢索 —— 可以做，但必須當成**一個 swept variant** 報告，不可以入主線。
+
+### 成本
+
+直讀：0 額外工時（L5 本來就是這樣）。
+RAG：+8 h（索引、檢索、評估）+ 一個新掃描維度 + 一個新失敗模式（檢索漏）。
+
+> 一句總結：**這裡的瓶頸是「講得對不對」，不是「看不看得到」。看得見的問題不存在，所以不需要檢索；對不對的問題用確定性檢查解決，所以也不需要檢索。**
