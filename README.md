@@ -47,6 +47,7 @@ research/       literature: 35 indexed papers, notes; PDFs are not committed
 deck/           proposal deck builder and its outputs
 rulebook.md     the violation rulebook — every gate as a decision procedure
 scripts/        fetch_papers.py — rebuild the paper corpus from arXiv ids
+docs/diagrams/  three views of the same system, generated from content.py
 WBS.md          work breakdown, 98 jobs, 22-week calendar
 docs/llm_plan.md   how outline → bullets → speaker notes are generated
 ```
