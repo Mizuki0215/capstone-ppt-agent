@@ -50,7 +50,7 @@ def lines(doc):
                 spans = line.get("spans", [])
                 if not spans:
                     continue
-                text = "".join(s["text"] for s in spans).strip()
+                text = figures.join_spans(spans)
                 if not text:
                     continue
                 size = max(s["size"] for s in spans)

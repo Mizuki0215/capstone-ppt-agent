@@ -83,3 +83,27 @@ def test_end_to_end_on_a_real_paper(tmp_path):
     # the workflow figure on page 2 is wide and short, and must not be a logo
     wide = [r for r in recs if r["page"] == "2"]
     assert wide and wide[0]["area"] > 50000
+
+
+# --------------------------------------------------------------------------- #
+# span joining: the gap decides, not a fixed separator
+# --------------------------------------------------------------------------- #
+
+def span(text, x0, x1, size=10.0):
+    return {"text": text, "bbox": (x0, 0, x1, 12), "size": size}
+
+
+def test_kerning_split_word_is_joined_without_a_space():
+    assert figures.join_spans([span("PPTA", 0, 30), span("GENT", 30.4, 60)]) == "PPTAGENT"
+
+
+def test_a_real_gap_becomes_a_space():
+    assert figures.join_spans([span("Stage", 0, 40), span("I:", 47, 60)]) == "Stage I:"
+
+
+def test_an_explicit_space_span_is_not_doubled():
+    assert figures.join_spans([span("a", 0, 10), span(" ", 10, 13), span("b", 13, 20)]) == "a b"
+
+
+def test_leading_space_in_a_span_is_respected():
+    assert figures.join_spans([span("Fig.", 0, 20), span(" 3", 21, 30)]) == "Fig. 3"

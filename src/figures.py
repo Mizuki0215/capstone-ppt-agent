@@ -31,11 +31,31 @@ MIN_BAND_H = 40.0
 WHITE_CUTOFF = 250               # a channel below this counts as ink
 
 
+def join_spans(spans, gap_ratio: float = 0.25) -> str:
+    """Join a line's spans, inserting a space only where the PDF left a gap.
+
+    Neither extreme works: joining with "" turns "PPTA|GENT" (a word split by
+    kerning) into "PPTAGENT" but also "Stage|I:" into "StageI"; joining with " "
+    does the opposite. The horizontal gap between span boxes distinguishes them:
+    a gap wider than a quarter of the font size is a space.
+    """
+    out: list[str] = []
+    prev_x1 = None
+    prev_size = 10.0
+    for sp in spans:
+        text = sp.get("text", "")
+        size = sp.get("size") or prev_size
+        if prev_x1 is not None and text and not text.startswith(" "):
+            if sp["bbox"][0] - prev_x1 > gap_ratio * size:
+                out.append(" ")
+        out.append(text)
+        prev_x1 = sp["bbox"][2]
+        prev_size = size
+    return re.sub(r"\s+", " ", "".join(out)).strip()
+
+
 def _block_text(block) -> str:
-    # spans inside a line are already spaced by the PDF; joining them with a
-    # space turned "PPTAGENT" into "PPTA GENT" wherever kerning split a word
-    lines = ["".join(span["text"] for span in line.get("spans", []))
-             for line in block.get("lines", [])]
+    lines = [join_spans(line.get("spans", [])) for line in block.get("lines", [])]
     return re.sub(r"\s+", " ", " ".join(l for l in lines if l)).strip()
 
 

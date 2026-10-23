@@ -103,6 +103,21 @@ python3 docs/build_doc_zh.py     # → docs/Proposal_Background_and_Plan_ZH.docx
 
 PDFs are exported from the DOCX with LibreOffice.
 
+### Checking a deck visually
+
+`libreoffice-kit render` returns uniform frames in this environment — it does
+that for a known-good deck too, so it is the tool, not the file. The path that
+works is convert, then rasterise with PyMuPDF:
+
+```sh
+"<node>" "<cli>" convert --input out/deck.pptx --output /tmp/deck.pdf
+python3 -c "import pymupdf; pymupdf.open('/tmp/deck.pdf')[1].get_pixmap(dpi=110).save('/tmp/s2.png')"
+```
+
+Reading the render is what caught three defects the structural checks passed:
+a caption cut mid-word, `PPTA GENT` (our span join), and `ex-tract` (our
+dehyphenation).
+
 ## Disclosure
 
 Generative AI tools were used for drafting and for code generation. All design

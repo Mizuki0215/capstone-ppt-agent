@@ -45,6 +45,15 @@ def para(tf, text, size, bold=False, color=INK, first=False, space_before=0, lin
     f.color.rgb = color
 
 
+def shorten(text, limit):
+    """Truncate at a word boundary - a caption cut mid-word reads as a bug."""
+    text = " ".join(text.split())
+    if len(text) <= limit:
+        return text
+    cut = text[:limit].rsplit(" ", 1)[0].rstrip(",;:")
+    return cut + " ..."
+
+
 def place_contained(slide, path, bx, by, bw, bh):
     """Place an image inside a box without distorting its aspect ratio."""
     pic = slide.shapes.add_picture(path, Inches(bx), Inches(by))
@@ -130,7 +139,7 @@ def build(plan, out):
             panel.fill.solid(); panel.fill.fore_color.rgb = PANEL
             panel.line.fill.background()
             tf = textbox(s, 6.62, 6.12, 5.7, 0.72)
-            para(tf, fig.get("caption", "")[:220], 9.5, color=GREY, first=True, line=1.15)
+            para(tf, shorten(fig.get("caption", ""), 210), 9.5, color=GREY, first=True, line=1.15)
         elif sl.get("figure"):
             cap = sl["figure"] if isinstance(sl["figure"], str) else sl["figure"].get("caption", "")
             panel = s.shapes.add_shape(1, Inches(0.95), Inches(6.15), Inches(11.4), Inches(0.75))

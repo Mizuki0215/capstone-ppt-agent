@@ -29,9 +29,9 @@ KEEP_HYPHEN = {
 
 def _rejoin(m):
     a, b = m.group(1), m.group(2)
-    if len(a) <= 2 or a.lower() in KEEP_HYPHEN:
-        return f"{a}-{b}"          # sequence-to- sequence -> sequence-to-sequence
-    return a + b                  # doc- uments -> documents
+    if a.lower() in KEEP_HYPHEN:
+        return f"{a}-{b}"          # a known compound, keep the hyphen
+    return a + b                  # doc- uments -> documents, ex- tract -> extract
 
 
 def dehyphenate(text):
