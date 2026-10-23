@@ -5,6 +5,7 @@ Runs on a Python that has python-pptx.
 """
 import argparse
 import json
+import os
 
 from pptx import Presentation
 from pptx.dml.color import RGBColor
@@ -42,6 +43,17 @@ def para(tf, text, size, bold=False, color=INK, first=False, space_before=0, lin
     f.size = Pt(size)
     f.bold = bold
     f.color.rgb = color
+
+
+def place_contained(slide, path, bx, by, bw, bh):
+    """Place an image inside a box without distorting its aspect ratio."""
+    pic = slide.shapes.add_picture(path, Inches(bx), Inches(by))
+    w_in, h_in = pic.width / 914400, pic.height / 914400
+    scale = min(bw / w_in, bh / h_in)
+    pic.width = int(pic.width * scale)
+    pic.height = int(pic.height * scale)
+    pic.left = Inches(bx + (bw - pic.width / 914400) / 2)
+    pic.top = Inches(by + (bh - pic.height / 914400) / 2)
 
 
 def add_notes(slide, text):
@@ -89,10 +101,13 @@ def build(plan, out):
         rule.fill.solid(); rule.fill.fore_color.rgb = RGBColor(0xDD, 0xE2, 0xE8)
         rule.line.fill.background()
 
+        fig = sl.get("figure") or {}
+        has_img = bool(fig.get("image")) and os.path.exists(fig["image"])
+
         bullets = sl["bullets"]
         total = sum(len(b) for b in bullets)
         size = body_size(len(bullets), total)
-        tf = textbox(s, 0.95, 1.75, 11.4, 4.5)
+        tf = textbox(s, 0.95, 1.75, 5.2 if has_img else 11.4, 4.2 if has_img else 4.5)
         for k, b in enumerate(bullets):
             p = tf.paragraphs[0] if k == 0 else tf.add_paragraph()
             p.space_before = Pt(0 if k == 0 else 12)
@@ -109,12 +124,20 @@ def build(plan, out):
             run.font.size = Pt(size)
             run.font.color.rgb = INK
 
-        if sl.get("figure"):
+        if has_img:
+            place_contained(s, fig["image"], 6.45, 1.62, 6.0, 4.30)
+            panel = s.shapes.add_shape(1, Inches(6.45), Inches(6.02), Inches(6.0), Inches(0.92))
+            panel.fill.solid(); panel.fill.fore_color.rgb = PANEL
+            panel.line.fill.background()
+            tf = textbox(s, 6.62, 6.12, 5.7, 0.72)
+            para(tf, fig.get("caption", "")[:220], 9.5, color=GREY, first=True, line=1.15)
+        elif sl.get("figure"):
+            cap = sl["figure"] if isinstance(sl["figure"], str) else sl["figure"].get("caption", "")
             panel = s.shapes.add_shape(1, Inches(0.95), Inches(6.15), Inches(11.4), Inches(0.75))
             panel.fill.solid(); panel.fill.fore_color.rgb = PANEL
             panel.line.fill.background()
             tf = textbox(s, 1.15, 6.28, 11.0, 0.5)
-            para(tf, sl["figure"], 11, color=GREY, first=True, line=1.2)
+            para(tf, cap, 11, color=GREY, first=True, line=1.2)
 
         tf = textbox(s, 11.9, 7.05, 0.6, 0.3)
         para(tf, f"{i:02d}", 9, color=GREY, first=True, align=PP_ALIGN.RIGHT)

@@ -11,6 +11,18 @@
     "To comprehensively evaluate the quality of generated presentations, we further introduce PPTEVAL, an evaluation ..."
    ],
    "source_page": 1,
+   "figure": {
+    "caption": "Figure 2: Overview of the PPTAGENT workflow. StageI: Presentation Analysis involves analyzing the input presentation to cluster slides into groups and extract their content schemas. Stage II: Presentation Generation generates new presentations guided by the outline, incorporating self-correction mechanisms to ensure robustness.",
+    "page": "2",
+    "image": "build/figures/PPTAgent_2501.03936/p02_01_figure.png",
+    "bbox": [
+     67.2,
+     66.9,
+     526.6,
+     298.2
+    ],
+    "area": 106256
+   },
    "seconds": 90,
    "notes": "This slide covers abstract. Open with: Automatically generating presentations from documents is a challenging task that requires accommodating content quality .... Then move to: To address these limitations, we propose PPTAGENT, which comprehensively improves presentation generation through a .... Target roughly 90 seconds here."
   },
@@ -39,7 +51,18 @@
     "Coherence: 4 Minor flaws presented in the logical structure Logical Structure Slide-1: Describe xx ..."
    ],
    "source_page": 4,
-   "figure": "Figure 1: Comparison between our PPTAGENT ap-",
+   "figure": {
+    "caption": "Figure 3: PPTEVAL assesses presentations from three dimensions: content, design, and coherence.",
+    "page": "4",
+    "image": "build/figures/PPTAgent_2501.03936/p04_01_figure.png",
+    "bbox": [
+     303.6,
+     68.3,
+     528.1,
+     183.5
+    ],
+    "area": 25852
+   },
    "seconds": 90,
    "notes": "This slide covers evaluation target. Open with: Table 1: The scoring criteria of dimensions in PPTE- VAL, all evaluated in 1-5 .... Then move to: The complete evaluation process is illustrated in Figure 3, with detailed scoring criteria and .... Target roughly 90 seconds here."
   },

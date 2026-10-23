@@ -140,10 +140,20 @@ def plan_from_json(data):
             "bullets": b[:BULLETS_PER_SLIDE[1]],
             "source_page": s["page"],
         })
-    # figures: attach the first unused caption to a mid-deck slide
-    figs = data.get("figures", [])
-    if figs and len(slides) >= 3:
-        slides[2]["figure"] = figs[0]["caption"][:160]
+    # figures: attach a clipped figure to the slide whose source page is
+    # nearest, at most two per deck. A caption with no image is not attached -
+    # it would be a reference to nothing.
+    figs = [f for f in data.get("figures", []) if f.get("image")]
+    for fig in figs[:2]:
+        try:
+            fpage = int(fig["page"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        cands = [sl for sl in slides if "figure" not in sl]
+        if not cands:
+            break
+        best = min(cands, key=lambda sl: abs(int(sl.get("source_page") or 1) - fpage))
+        best["figure"] = fig
     seconds = TOTAL_SECONDS / max(1, len(slides))
     for sl in slides:
         sl["seconds"] = round(seconds)

@@ -22,3 +22,6 @@ deck/test*.pdf
 *.log
 *.tmp
 .env
+
+# derived figure crops (regenerate with run.sh)
+build/figures/

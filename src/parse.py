@@ -6,11 +6,15 @@ compose.py. Target: single-column English research papers.
 """
 import argparse
 import json
+import os
 import re
 import statistics
 import sys
+from pathlib import Path
 
 import fitz
+
+import figures
 
 HEADING_PAT = re.compile(
     r"^(abstract|introduction|related work|background|method|methods|approach|"
@@ -139,11 +143,16 @@ def main():
             "text": body,
         })
 
-    # figures / tables by caption line
-    figs = []
-    for pno, text, size, bold in all_lines:
-        if CAPTION.match(text) and 10 < len(text) < 300:
-            figs.append({"caption": re.sub(r"\s+", " ", text).strip(), "page": pno})
+    # figures / tables: clip the region above each caption (see figures.py).
+    # Captions alone would put "Figure 3: ..." on a slide with nothing above it.
+    stem = re.sub(r"[^A-Za-z0-9._-]+", "_", os.path.splitext(os.path.basename(args.pdf))[0])
+    figs = figures.extract(args.pdf, Path("build/figures") / stem, stem)
+    captions_seen = sum(len(figures.find_captions(p)) for p in doc)
+    if not figs:   # scanned PDF, or no caption had ink above it
+        for pno, text, size, bold in all_lines:
+            if CAPTION.match(text) and 10 < len(text) < 300:
+                figs.append({"caption": re.sub(r"\s+", " ", text).strip(), "page": str(pno),
+                             "image": None})
 
     payload = {
         "source": args.pdf,
@@ -151,11 +160,14 @@ def main():
         "pages": doc.page_count,
         "median_font": round(med, 1),
         "sections": out_sections,
+        "captions": captions_seen,
         "figures": figs[:40],
     }
     with open(args.out, "w") as fh:
         json.dump(payload, fh, indent=1)
-    print(f"sections={len(out_sections)} figures={len(figs)} -> {args.out}")
+    with_image = sum(1 for f in figs if f.get("image"))
+    print(f"sections={len(out_sections)} captions={captions_seen} "
+          f"figures={len(figs)} (clipped={with_image}) -> {args.out}")
     for s in out_sections[:12]:
         print(f"  p{s['page']:<3} {s['title'][:60]:60s} {len(s['text']):>5} chars")
 
