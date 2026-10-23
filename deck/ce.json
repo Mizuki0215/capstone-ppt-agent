@@ -1,0 +1,29 @@
+{
+  "format": "pptx",
+  "verdict": "pass",
+  "checks": [
+    {
+      "id": "package",
+      "status": "pass"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "What the repair actually does"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "no new claims"
+    },
+    {
+      "id": "count",
+      "status": "pass",
+      "expected": 21,
+      "actual": 21
+    }
+  ],
+  "summary": {
+    "slides": 21
+  }
+}

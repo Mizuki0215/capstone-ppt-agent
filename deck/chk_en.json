@@ -1,0 +1,44 @@
+{
+  "format": "pptx",
+  "verdict": "pass",
+  "checks": [
+    {
+      "id": "package",
+      "status": "pass"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "Why this direction"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "slide-ready rate"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "Three ways to build"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "References"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "Reducing hallucination"
+    },
+    {
+      "id": "count",
+      "status": "pass",
+      "expected": 20,
+      "actual": 20
+    }
+  ],
+  "summary": {
+    "slides": 20
+  }
+}

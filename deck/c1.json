@@ -1,0 +1,34 @@
+{
+  "format": "pptx",
+  "verdict": "pass",
+  "checks": [
+    {
+      "id": "package",
+      "status": "pass"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "Speaker notes"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "20-participant"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "20 raters"
+    },
+    {
+      "id": "count",
+      "status": "pass",
+      "expected": 20,
+      "actual": 20
+    }
+  ],
+  "summary": {
+    "slides": 20
+  }
+}

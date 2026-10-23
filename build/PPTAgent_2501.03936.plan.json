@@ -1,0 +1,115 @@
+{
+ "title": "PPTAGENT: Generating and Evaluating Presentations",
+ "slides": [
+  {
+   "title": "Abstract",
+   "bullets": [
+    "Automatically generating presentations from documents is a challenging task that requires accommodating content quality ...",
+    "To address these limitations, we propose PPTAGENT, which comprehensively improves presentation generation through a ...",
+    "Existing methods primarily focus on improving and evaluating the content quality in isolation, overlooking ...",
+    "PPTAGENT first analyzes reference presentations to ex-tract slide-level functional types and content schemas, then ...",
+    "To comprehensively evaluate the quality of generated presentations, we further introduce PPTEVAL, an evaluation ..."
+   ],
+   "source_page": 1,
+   "seconds": 90,
+   "notes": "This slide covers abstract. Open with: Automatically generating presentations from documents is a challenging task that requires accommodating content quality .... Then move to: To address these limitations, we propose PPTAGENT, which comprehensively improves presentation generation through a .... Target roughly 90 seconds here."
+  },
+  {
+   "title": "Introduction",
+   "bullets": [
+    "Slide Clustering Bullets: few bullet points Opening: title and icon Display: landscape painting 2",
+    "Specifically, the generated editing actions are executed within a REPL1 environment",
+    "An overview of our workflow is illustrated in Figure 2",
+    "Outline Generation Stage \u2160: Presentation Analysis Reference Presentation 1",
+    "As shown in Figure 2, we first analyze and cluster reference slides into categories ...",
+    "Re-sults demonstrate that PPTAGENT generates high-quality presentations, achieving an average score of 3.67 for ..."
+   ],
+   "source_page": 1,
+   "seconds": 90,
+   "notes": "This slide covers introduction. Open with: Slide Clustering Bullets: few bullet points Opening: title and icon Display: landscape painting 2. Then move to: Specifically, the generated editing actions are executed within a REPL1 environment. Target roughly 90 seconds here."
+  },
+  {
+   "title": "Evaluation Target",
+   "bullets": [
+    "Table 1: The scoring criteria of dimensions in PPTE- VAL, all evaluated in 1-5 ...",
+    "The complete evaluation process is illustrated in Figure 3, with detailed scoring criteria and ...",
+    "Dimension Criteria Content Text should be concise and grammatically sound, supported by relevant images",
+    "Design Harmonious colors and proper layout ensure readability, while visual elements like geometric shapes ...",
+    "Coherence Structure develops progressively, incorporating essential background information",
+    "Coherence: 4 Minor flaws presented in the logical structure Logical Structure Slide-1: Describe xx ..."
+   ],
+   "source_page": 4,
+   "figure": "Figure 1: Comparison between our PPTAGENT ap-",
+   "seconds": 90,
+   "notes": "This slide covers evaluation target. Open with: Table 1: The scoring criteria of dimensions in PPTE- VAL, all evaluated in 1-5 .... Then move to: The complete evaluation process is illustrated in Figure 3, with detailed scoring criteria and .... Target roughly 90 seconds here."
+  },
+  {
+   "title": "Experiment",
+   "bullets": [
+    "All open-source LLMs are deployed us-ing the VLLM framework on NVIDIA A100 GPUs",
+    "Each configuration generates 50 presentations (5 domains \u00d7 10 input documents), as they do ...",
+    "Specifically, we define configurations as combinations of a language model (LM) and a vision ...",
+    "We have curated 10,448 presentations from this source and made them publicly available to ...",
+    "The total computational cost for experiments are approximately 500 GPU hours",
+    "In addition, we collected 50 documents from the same domains to be used as ..."
+   ],
+   "source_page": 4,
+   "seconds": 90,
+   "notes": "This slide covers experiment. Open with: All open-source LLMs are deployed us-ing the VLLM framework on NVIDIA A100 GPUs. Then move to: Each configuration generates 50 presentations (5 domains \u00d7 10 input documents), as they do .... Target roughly 90 seconds here."
+  },
+  {
+   "title": "Evaluation Metrics",
+   "bullets": [
+    "Further agreement evaluation is shown in Section 5.5",
+    "Using Llama-3-8B , we calculate the average perplexity across all slides in a presentation",
+    "Due to the limited sample size, we calculate the FID using a 64-dimensional output ...",
+    "Most notably, PPTAGENT shows a significant enhancement in the coherence dimension (4.48 vs",
+    "Compared to the rule-based baseline (DocPres), PPTAGENT exhibits substantial improvements in both the design ...",
+    "Moreover, detailed performance of Qwen2.5LM+Qwen2-VLVM across various domains is illustrated in Table 8, underscoring ..."
+   ],
+   "source_page": 5,
+   "seconds": 90,
+   "notes": "This slide covers evaluation metrics. Open with: Further agreement evaluation is shown in Section 5.5. Then move to: Using Llama-3-8B , we calculate the average perplexity across all slides in a presentation. Target roughly 90 seconds here."
+  },
+  {
+   "title": "Analysis",
+   "bullets": [
+    "PPTAgent (a) DocPres KCTV PPTAgent (b) Figure 5: Comparative analysis of presentation generation across ...",
+    "Although GPT-4o exhibits superior self-correction capabilities compared to Qwen2.5, Qwen2.5 encounters fewer errors in ...",
+    "Table 5 shows the correlation of ratings between humans and LLMs",
+    "All presented data of similarity exhibit a p-value below 0.05, indicating a statistically significant ...",
+    "All experiments were conducted using the Qwen2.5LM+Qwen2-VLVM configuration",
+    "Additionally, we observed that Qwen2-VL experiences errors more frequently and has poorer self-correction capabilities ..."
+   ],
+   "source_page": 6,
+   "seconds": 90,
+   "notes": "This slide covers analysis. Open with: PPTAgent (a) DocPres KCTV PPTAgent (b) Figure 5: Comparative analysis of presentation generation across .... Then move to: Although GPT-4o exhibits superior self-correction capabilities compared to Qwen2.5, Qwen2.5 encounters fewer errors in .... Target roughly 90 seconds here."
+  },
+  {
+   "title": "Conclusion",
+   "bullets": [
+    "Our ex-periments across data from multiple domains have demonstrated the superiority of our method",
+    "Moreover, we propose PPTEVAL to provide quantitative metrics for assessing presentation quality",
+    "This research provides a new paradigm for generating slides under unsupervised conditions and offers ...",
+    "In this paper, we introduce PPTAGENT, which conceptualizes presentation generation as a two-stage presentation ..."
+   ],
+   "source_page": 8,
+   "seconds": 90,
+   "notes": "This slide covers conclusion. Open with: Our ex-periments across data from multiple domains have demonstrated the superiority of our method. Then move to: Moreover, we propose PPTEVAL to provide quantitative metrics for assessing presentation quality. Target roughly 90 seconds here."
+  },
+  {
+   "title": "Limitations",
+   "bullets": [
+    "While PPTAGENT demonstrates promising capabilities in presentation generation, several limitations remain",
+    "First, despite achieving a high success rate (>95%) on our dataset, the model occasionally ...",
+    "This manifests in occasional design flaws, such as overlapping elements, which can compromise the ...",
+    "Ethical Considerations In the construction of Zenodo10K, we utilized the publicly available API to ...",
+    "Future work should focus on enhancing the robustness, reducing reference dependency, and better incorporating ...",
+    "Third, although PPTAGENT shows improvements in layout optimization compared to prior approaches, it does ..."
+   ],
+   "source_page": 9,
+   "seconds": 90,
+   "notes": "This slide covers limitations. Open with: While PPTAGENT demonstrates promising capabilities in presentation generation, several limitations remain. Then move to: First, despite achieving a high success rate (>95%) on our dataset, the model occasionally .... Target roughly 90 seconds here."
+  }
+ ]
+}

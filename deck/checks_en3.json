@@ -1,0 +1,34 @@
+{
+  "format": "pptx",
+  "verdict": "pass",
+  "checks": [
+    {
+      "id": "package",
+      "status": "pass"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "re-freeze"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "SlideAudit supplies the label space"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "primary claim"
+    },
+    {
+      "id": "count",
+      "status": "pass",
+      "expected": 17,
+      "actual": 17
+    }
+  ],
+  "summary": {
+    "slides": 17
+  }
+}

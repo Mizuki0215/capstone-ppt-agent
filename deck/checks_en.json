@@ -1,0 +1,44 @@
+{
+  "format": "pptx",
+  "verdict": "pass",
+  "checks": [
+    {
+      "id": "package",
+      "status": "pass"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "Paper-Distillation PPT Agent"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "Literature review"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "Gap 1"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "CONSEQUENCE"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "References"
+    },
+    {
+      "id": "count",
+      "status": "pass",
+      "expected": 15,
+      "actual": 15
+    }
+  ],
+  "summary": {
+    "slides": 15
+  }
+}

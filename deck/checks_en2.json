@@ -1,0 +1,39 @@
+{
+  "format": "pptx",
+  "verdict": "pass",
+  "checks": [
+    {
+      "id": "package",
+      "status": "pass"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "deck-ready rate"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "Evidence plan"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "SlideAudit"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "DECKBench"
+    },
+    {
+      "id": "count",
+      "status": "pass",
+      "expected": 17,
+      "actual": 17
+    }
+  ],
+  "summary": {
+    "slides": 17
+  }
+}

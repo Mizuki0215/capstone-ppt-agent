@@ -1,0 +1,116 @@
+{
+ "title": "DOC2PPT: Automatic Presentation Slides Generation from Scienti\ufb01c Documents",
+ "slides": [
+  {
+   "title": "Abstract",
+   "bullets": [
+    "We propose a hierarchical sequence-to-sequence approach to tackle our task in an end-to-end manner",
+    "Can machines learn to emulate this laborious process?",
+    "Our approach exploits the inherent structures within documents and slides and incorporates paraphrasing and ...",
+    "We show that our approach outperforms strong baselines and produces slides with rich content ...",
+    "We present a novel task and approach for document-to-slide generation",
+    "Creating presentation materials requires complex multimodal reasoning skills to summarize key concepts and arrange ..."
+   ],
+   "source_page": 1,
+   "seconds": 90,
+   "notes": "This slide covers abstract. Open with: We propose a hierarchical sequence-to-sequence approach to tackle our task in an end-to-end manner. Then move to: Can machines learn to emulate this laborious process?. Target roughly 90 seconds here."
+  },
+  {
+   "title": "Introduction",
+   "bullets": [
+    "We hope that our DOC2PPT will advance the state-of-the-art in the vision-and-language domain",
+    "In this paper, we introduce DOC2PPT, a novel task of creating presentation slides from ...",
+    "This requires solving several challenges in the vision-and-language domain, e.g., visual-semantic embedding and multimodal ...",
+    "Lastly, we explore both template-based and learning-based layout design and compare them both quantitatively ...",
+    "It requires skills to abstract complex concepts and conveys them in a concise and ...",
+    "Furthermore, none of the above addresses the challenge of \ufb01nd-ing an optimal visual layout ..."
+   ],
+   "source_page": 1,
+   "seconds": 90,
+   "notes": "This slide covers introduction. Open with: We hope that our DOC2PPT will advance the state-of-the-art in the vision-and-language domain. Then move to: In this paper, we introduce DOC2PPT, a novel task of creating presentation slides from .... Target roughly 90 seconds here."
+  },
+  {
+   "title": "Related Work",
+   "bullets": [
+    "We propose a large dataset of 5,873 pairs of high-quality scienti\ufb01c documents and slide ...",
+    "Learning text-image similarity has been studied in the visual-semantic embedding (VSE) literature (Karpathy and ...",
+    "As argued above, our task brings a new suite of challenges to vision-and-language understanding",
+    "Furthermore, existing datasets in this domain (such as TalkSumm (Lev et al",
+    "Joint modeling of vision-andlanguage has been studied from different angles",
+    "Our task involves generating slides with relevant text and \ufb01gures"
+   ],
+   "source_page": 2,
+   "figure": "Figure 1: We introduce DOC2PPT, a novel task of gener-",
+   "seconds": 90,
+   "notes": "This slide covers related work. Open with: We propose a large dataset of 5,873 pairs of high-quality scienti\ufb01c documents and slide .... Then move to: Learning text-image similarity has been studied in the visual-semantic embedding (VSE) literature (Karpathy and .... Target roughly 90 seconds here."
+  },
+  {
+   "title": "Approach",
+   "bullets": [
+    "Table 1 reports the descriptive statistics of our dataset",
+    "We tune the two hyper-parameters \u03b8R and \u03b8A via cross-validation (we set \u03b8R = ...",
+    "For simplicity, we discard F out if its highest visual embedding similarity is lower ...",
+    "The goal of DOC2PPT is to generate a slide deck from a multimodal document ...",
+    "Figure 2: An overview of our architecture",
+    "This is a natural choice to encode our prior knowledge about the hierarchical structure"
+   ],
+   "source_page": 2,
+   "seconds": 90,
+   "notes": "This slide covers approach. Open with: Table 1 reports the descriptive statistics of our dataset. Then move to: We tune the two hyper-parameters \u03b8R and \u03b8A via cross-validation (we set \u03b8R = .... Target roughly 90 seconds here."
+  },
+  {
+   "title": "Experiments",
+   "bullets": [
+    "DOC2PPT is a new task with no established evaluation metrics and baselines",
+    "We carefully ablate various components of our approach and evaluate them on our proposed ...",
+    "We propose automatic metrics speci\ufb01- cally designed for evaluating slide generation methods",
+    "We also perform hu-man evaluation to assess the generation quality"
+   ],
+   "source_page": 5,
+   "seconds": 90,
+   "notes": "This slide covers experiments. Open with: DOC2PPT is a new task with no established evaluation metrics and baselines. Then move to: We carefully ablate various components of our approach and evaluate them on our proposed .... Target roughly 90 seconds here."
+  },
+  {
+   "title": "Evaluation Metrics",
+   "bullets": [
+    "Each layer of the PT is based on a 256-unit GRU",
+    "Implementation Detail For the DR, we use a Bi-GRU with 1,024 hidden units and ...",
+    "The PAR is designed as Seq2Seq with 512-unit GRU",
+    "Therefore, we propose the slide-level ROUGE: ROUGE-SL = ROUGE-L \u00d7 e |Q\u2212\u02dc Q| Q ...",
+    "Intuitively, the number of slides in a deck is a good proxy for the ...",
+    "Ablation Settings ROUGE-SL LC-FS TFR mIoU Hrch-PT PAR TIM Post Proc"
+   ],
+   "source_page": 5,
+   "seconds": 90,
+   "notes": "This slide covers evaluation metrics. Open with: Each layer of the PT is based on a 256-unit GRU. Then move to: Implementation Detail For the DR, we use a Bi-GRU with 1,024 hidden units and .... Target roughly 90 seconds here."
+  },
+  {
+   "title": "Results and Discussions",
+   "bullets": [
+    "Table 2 (a) and (b) compare the two models on the four metrics",
+    "Table 2 (f) shows this post-processing further improves the two image-related metrics, LC-FS and ...",
+    "Significance tests: two-sample t-test (p <0.05.) maining space under the main content",
+    "How well do the \ufb01gure(s)/tables(s) in DECK A match the text or \ufb01gures/tables in ...",
+    "The responses were all on a scale of 1 (not similar at all) to ...",
+    "The workers were then asked to answer three questions: Q1"
+   ],
+   "source_page": 6,
+   "seconds": 90,
+   "notes": "This slide covers results and discussions. Open with: Table 2 (a) and (b) compare the two models on the four metrics. Then move to: Table 2 (f) shows this post-processing further improves the two image-related metrics, LC-FS and .... Target roughly 90 seconds here."
+  },
+  {
+   "title": "Conclusion",
+   "bullets": [
+    "Our slide stemming step is 93% accurate based on the human annotated validation set",
+    "Sentence Matching Table 4 shows examples of matching sentences between the paper and the ...",
+    "Precision, recall, and F1 are evaluated using the human-labeled testing set",
+    "Slides are matched with the section with the highest cosine similarity and our slide-section ...",
+    "Also, using hobj bene\ufb01ts more (w/ 32.27 vs w/o 31.95)",
+    "Details of the Data Processing Steps Section 4 in our main paper explains how ..."
+   ],
+   "source_page": 7,
+   "seconds": 90,
+   "notes": "This slide covers conclusion. Open with: Our slide stemming step is 93% accurate based on the human annotated validation set. Then move to: Sentence Matching Table 4 shows examples of matching sentences between the paper and the .... Target roughly 90 seconds here."
+  }
+ ]
+}

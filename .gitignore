@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# --- third-party paper corpus (≈400 MB) -------------------------------------
+# These are other people's papers, not our work, and they bloat history.
+# Reproduce them from the index instead:  python3 scripts/fetch_papers.py
+research/pdfs/*.pdf
+
+# --- regenerable render artefacts -------------------------------------------
+deck/preview-*/
+deck/*_png/
+deck/test*.pdf
+
+# --- local scratch ----------------------------------------------------------
+*.log
+*.tmp
+.env

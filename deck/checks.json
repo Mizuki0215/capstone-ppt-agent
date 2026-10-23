@@ -1,0 +1,44 @@
+{
+  "format": "pptx",
+  "verdict": "pass",
+  "checks": [
+    {
+      "id": "package",
+      "status": "pass"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "\u8ad6\u6587\u6574\u7406\u578b PPT Agent"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "\u6587\u737b\u7814\u7a76"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "\u7f3a\u53e3 1"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "\u5f8c\u679c"
+    },
+    {
+      "id": "contains",
+      "status": "pass",
+      "text": "\u5f15\u7528\u6587\u737b"
+    },
+    {
+      "id": "count",
+      "status": "pass",
+      "expected": 15,
+      "actual": 15
+    }
+  ],
+  "summary": {
+    "slides": 15
+  }
+}

@@ -1,0 +1,406 @@
+[
+ {
+  "deck": "out/DOC2PPT_2101.11796.pptx",
+  "slides": 9,
+  "clean_slides": 0,
+  "srr": 0.0,
+  "violations_total": 31,
+  "slides_with_violation_by_gate": {
+   "G3": 9,
+   "G6": 8
+  },
+  "detail": [
+   {
+    "slide": 1,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 14 pt"
+     }
+    ],
+    "chars": 109,
+    "clean": false
+   },
+   {
+    "slide": 2,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 15 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "578 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "8 bullets"
+     }
+    ],
+    "chars": 578,
+    "clean": false
+   },
+   {
+    "slide": 3,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 15 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "636 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "8 bullets"
+     }
+    ],
+    "chars": 636,
+    "clean": false
+   },
+   {
+    "slide": 4,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 17 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 5 at 11 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 6 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "606 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "9 bullets"
+     }
+    ],
+    "chars": 606,
+    "clean": false
+   },
+   {
+    "slide": 5,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 17 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "464 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "8 bullets"
+     }
+    ],
+    "chars": 464,
+    "clean": false
+   },
+   {
+    "slide": 6,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "351 chars"
+     }
+    ],
+    "chars": 351,
+    "clean": false
+   },
+   {
+    "slide": 7,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "438 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "8 bullets"
+     }
+    ],
+    "chars": 438,
+    "clean": false
+   },
+   {
+    "slide": 8,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 17 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "501 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "8 bullets"
+     }
+    ],
+    "chars": 501,
+    "clean": false
+   },
+   {
+    "slide": 9,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 17 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "515 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "8 bullets"
+     }
+    ],
+    "chars": 515,
+    "clean": false
+   }
+  ]
+ },
+ {
+  "deck": "out/PPTAgent_2501.03936.pptx",
+  "slides": 9,
+  "clean_slides": 0,
+  "srr": 0.0,
+  "violations_total": 32,
+  "slides_with_violation_by_gate": {
+   "G3": 9,
+   "G6": 8
+  },
+  "detail": [
+   {
+    "slide": 1,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 14 pt"
+     }
+    ],
+    "chars": 84,
+    "clean": false
+   },
+   {
+    "slide": 2,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 15 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "614 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "7 bullets"
+     }
+    ],
+    "chars": 614,
+    "clean": false
+   },
+   {
+    "slide": 3,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 17 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "547 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "8 bullets"
+     }
+    ],
+    "chars": 547,
+    "clean": false
+   },
+   {
+    "slide": 4,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 15 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 5 at 11 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 6 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "672 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "9 bullets"
+     }
+    ],
+    "chars": 672,
+    "clean": false
+   },
+   {
+    "slide": 5,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 17 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "551 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "8 bullets"
+     }
+    ],
+    "chars": 551,
+    "clean": false
+   },
+   {
+    "slide": 6,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 15 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "594 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "8 bullets"
+     }
+    ],
+    "chars": 594,
+    "clean": false
+   },
+   {
+    "slide": 7,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 15 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "628 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "8 bullets"
+     }
+    ],
+    "chars": 628,
+    "clean": false
+   },
+   {
+    "slide": 8,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "438 chars"
+     }
+    ],
+    "chars": 438,
+    "clean": false
+   },
+   {
+    "slide": 9,
+    "violations": [
+     {
+      "gate": "G3",
+      "detail": "TextBox 3 at 15 pt"
+     },
+     {
+      "gate": "G3",
+      "detail": "TextBox 4 at 9 pt"
+     },
+     {
+      "gate": "G6",
+      "detail": "659 chars"
+     },
+     {
+      "gate": "G6",
+      "detail": "8 bullets"
+     }
+    ],
+    "chars": 659,
+    "clean": false
+   }
+  ]
+ }
+]
