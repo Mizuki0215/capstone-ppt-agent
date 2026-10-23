@@ -172,3 +172,55 @@ WBS 更新：P1.7（notes schema）併入 L7，故 P1 由 12 個 job 變 11 個�
 建議：**主用 `gpt-4o-mini` 級，另抽 5 張 slide 用旗艦做一次「品質上界」對照**——報告可以講「我們用便宜模型，唔係靠大模型堆品質」，對 reviewer 來講更有說服力。
 
 另外要確認：**你有冇 OpenAI API key？** 現時環境冇 `OPENAI_API_KEY`；`api.openai.com` 通（401 = 通，只欠 key）。冇 key 的話 L1–L2 照做（cache 同 client 可以 mock），L3 之後就卡住。
+
+---
+
+## 9. 為什麼不是 model training
+
+（2026-10-23 決策記錄。若 reviewer 問「為什麼不用學習式方法」，答案就是這一節。）
+
+「train model」在這個題目下可以指三件完全不同的事，要分開判斷：
+
+| 想 train 什麼 | 需要什麼 | 對這份論文的影響 |
+|---|---|---|
+| **① 生成器**（fine-tune LLM 由 paper 出 deck） | ≥1,000 對 (paper, deck)；GPU；數週調參與評估 | 直接對撞同題其他同學的主線（brief 的 Topic 2 本身），而**完全答不到**本研究問的問題 |
+| **② 學習式 detector**（由 slide 圖判斷有無缺陷） | 大量標註圖；正是 SlideAudit 做過的事（2,400 張、付費標註員） | 會摧毁本研究的核心主張：deterministic、可審核、reference-free |
+| **③ 學習式 repair policy**（RL / imitation） | 編輯軌跡（PPTArena 有 1,300 條人手編輯） | 有趣，但係另一個 project；單人 20 週做唔完 |
+
+### 三個決定性理由
+
+**1. 論文的主張與「學習式判斷」互斥。**
+proposal §5 寫得很白：「these are arithmetic, not judgements. A rule can be audited; a model's opinion cannot.」整份 proposal 相對 PPTPilot 的差異化，就是「deterministic 而唔係 VLM judge」。若把 detector 換成訓練出來的模型，就變回自己批評的那個東西——reviewer 會即時指出。
+
+**2. 標註預算只能驗證，不能訓練。**
+本項目的標註是 110 張、兩位標註者獨立、計 per-class κ。這個數量：
+- **足夠**驗證一個 deterministic detector 的 precision/recall（每個 gate 約 18 張）
+- **远远不夠**訓練任何 detector（110 張 × 6 類，未計類別不平衡）
+
+而 proposal §6 已經用同一個邏輯講過閾值：40 張校準 slide 支撐不起 6 個 fit 出來的閾值。**訓練比 fit 閾值需要更多數據**，所以同一條理由更強地否決 training。
+
+**3. 訓練一個更好的生成器，會令本研究的問題更難答，而不是更容易。**
+研究問題是因果的：「量度本身帶來幾多改善？」若生成器同時在變，A2 − A1 就不再乾淨。把生成器固定住（用現成 API、cache 凍結），反而是**實驗設計的需要**，不是偷懶。
+
+### 成本對照（單人 250 h 預算）
+
+| 路線 | 額外工時 | 額外風險 | 答到研究問題？ |
+|---|---|---|---|
+| 用 API + cache（本計劃） | 0（已計入 L1–L13） | provider 更新版本（用 snapshot id 記錄） | ✅ |
+| Fine-tune 生成器 | +60–80 h | 數據對齊、評估成本、與他人撞題 | ❌ |
+| 訓練 detector | +40 h | 110 張樣本訓練必失敗 | ❌（且摧毁主張） |
+
+### 如果你仍然想有「學習」成分：有一個便宜且加分的做法
+
+不是取代 deterministic detector，而是**用它做對照組**，證明 deterministic 在這個任務上更值得信：
+
+| ID | Job | 驗收 | h |
+|---|---|---|---|
+| S1 | 由 P3.10 的 110 張 slide 渲染 PNG | 110 張齊 | 1.0 |
+| S2 | 抽特徵（尺寸、面積佔比、字數、色差） | 特徵表 110 × N | 1.5 |
+| S3 | 訓練 logistic regression / 小 CNN，5-fold CV | per-gate F1 | 2.0 |
+| S4 | 同 deterministic detector 比 per-gate F1 + 樣本效率曲線 | 一張圖：F1 vs 訓練樣本數 | 1.0 |
+| S5 | 寫入報告「為何選 deterministic」 | 半頁 + 圖 | 0.5 |
+| | **合計** | | **6.0 h** |
+
+這 6 小時做的是**辯護**，不是取代：它用數據回答「你為什麼不用 ML」，而唔是用 ML 去回答一個唔需要 ML 的問題。要就加入 WBS 做 S-block（總工時 208.3 → 214.3 h）。
