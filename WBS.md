@@ -60,7 +60,7 @@
 | P0.12 | git init + 首 commit + 週報模板 | repo + `docs/weekly/` | 由空資料夾到跑起 ≤ 3 command | 1.0 | — |
 | P0.13 | 收 feedback → 改 → 11/05 提交 | 系統已提交 | 提交編號 | 4.0 | P0.11 |
 
-### P1｜基礎加固（W3–4，11/09 – 11/22）— 23.5 h
+### P1｜基礎加固（W3–4，11/09 – 11/22）— 21.5 h
 
 | ID | Job | 產出 | 驗收 | h | Dep |
 |---|---|---|---|---|---|
@@ -70,12 +70,33 @@
 | P1.4 | table 轉文字 fallback | `src/parse.py` | figure 失敗時有替代 | 2.0 | P1.3 |
 | P1.5 | parse 單元測試（3 fixture） | `tests/` | `pytest -q` 綠 | 2.0 | P1.2 |
 | P1.6 | claim 抽取（每篇 5–8 條） | `src/claims.py` | 8 篇各出 5–8 條，可人手改 | 3.0 | P1.2 |
-| P1.7 | speaker notes schema：轉場句 + 每節時間預算 | `src/compose.py` | notes 含 transition + 秒數 | 2.0 | — |
 | P1.8 | 第二套 template（minimal） | `src/render.py` | `--template minimal` 出到 deck | 2.5 | — |
 | P1.9 | 圖片 contain 唔拉伸 | 同上 | aspect ratio 誤差 < 1% | 1.5 | — |
 | P1.10 | 鎖 13.333×7.5 / 16:9 | 同上 | 每份 deck 都有 assertion | 0.5 | — |
 | P1.11 | `run.sh` 8 篇全通 + 記 latency/cost | `out/ledger.csv` | 8 行，無 crash | 2.0 | P1.2–10 |
 | P1.12 | baseline A：固定模板人手填 | `baseline/A/` | 1 篇示範 + 流程文件 | 2.0 | — |
+
+### P1b｜生成層（LLM）(W3–4，與 P1 並行）— 26.0 h
+
+設計見 [`docs/llm_plan.md`](docs/llm_plan.md)。LLM 只做三件：選論點（outline）、壓縮（bullets）、展開（notes）；text layer 生成一次即凍結。
+
+| ID | Job | 產出 | 驗收 | h | Dep |
+|---|---|---|---|---|---|
+| L1 | cache 層 + prompt 版本號 | `src/llm/cache.py` | 同輸入重跑 0 call、輸出 byte-identical | 2.5 | — |
+| L2 | provider client（retry / timeout / 成本記錄） | `src/llm/client.py` | 遇 429 會 retry 而唔 crash | 2.0 | — |
+| L3 | outline 階段 + JSON schema | `src/llm/outline.py` | 8 篇全部出到合法 JSON | 3.0 | L1, L2 |
+| L4 | outline 驗證 5 條 | `tests/test_outline.py` | 5 條各有 test | 1.5 | L3 |
+| L5 | bullets 階段 + 約束注入 | `src/llm/bullets.py` | 違反約束會被 flag，唔會靜靜過 | 2.5 | L3 |
+| L6 | **grounding V1 / V2**（數字 + evidence id） | `src/llm/grounding.py` | 人手塞假數字，一定被抓 | 2.5 | L5 |
+| L7 | notes 階段 + 轉場 / 時間提示 | `src/llm/notes.py` | 每張都有 3 個要素 | 2.0 | L5 |
+| L8 | notes 指標 V4 + 失敗分類 | `docs/notes_failures.md` | 有失敗原因統計 | 1.5 | L7 |
+| L9 | 兩段式 notes 重試 | `src/llm/notes.py` | 只重發不合格的 slide | 1.0 | L8 |
+| L10 | **A0 naive 臂**（1 call 全 deck） | `src/llm/naive.py` | 8 篇出得到 deck | 1.5 | L2 |
+| L11 | `--offline` replay | 同上 | 斷網跑得完 8 篇 | 1.0 | L1 |
+| L12 | 8 篇正式跑 + 品質檢視表 | `docs/llm_quality.md` | 每篇一張 V1–V5 表 | 2.0 | L3–L9 |
+| L13 | prompt 迭代 3 輪（人手評） | `docs/prompts.md` | 3 個版本有分數 | 3.0 | L12 |
+
+> **A1 / A2 的文字必須 byte-identical**：A2 讀 A1 的 cache，只跑 repair。否則「A2 − A1 = inspection 的貢獻」唔成立，而呢個差值就係全份論文的主結果。
 
 ### P2｜W1 量度（W5–7，11/23 – 12/13）— 41.5 h
 
@@ -176,7 +197,7 @@
 | 10/23 Fri – 10/29 Thu | P0.1–P0.11 | **10/29 交 supervisor**（brief p9：死線前一星期） |
 | 10/30 – 11/04 | P0.13 buffer + P1.1–1.3 | 等 feedback，唔好排滿 |
 | 11/05 Thu | 提交 | **Proposal due** |
-| 11/09 – 11/22 (W3–4) | P1 完成、P2.1–P2.7 | W5 開始做 gate 實現 |
+| 11/09 – 11/22 (W3–4) | P1 + P1b 完成、P2.1–P2.7 | W5 開始做 gate 實現 |
 | 11/23 – 12/13 (W5–7) | P2.8–P2.20 | **12/13 區辨效度 GO/NO-GO** |
 | 12/14 – 01/17 (W8–11) | P3 主體；**12 月中起並行 P6.1–6.3** | **01/07 Interim** |
 | 01/18 – 02/07 (W12–14) | P4 + P3.10–3.12 標註 | 掃描凍結 |
@@ -211,15 +232,16 @@ P2.1–P2.7 (rulebook 凍結)
 | Block | 期間 | 計劃工時 | +20% buffer |
 |---|---|---|---|
 | P0 提案 | 10/23 – 11/05 | 14.8 h | 17.8 |
-| P1 基礎 | W3–4 | 23.5 h | 28.2 |
+| P1 基礎 | W3–4 | 21.5 h | 25.8 |
+| P1b 生成層 (LLM) | W3–4 | 26.0 h | 31.2 |
 | P2 量度 | W5–7 | 41.5 h | 49.8 |
 | P3 維修 | W8–11 | 28.0 h | 33.6 |
 | P4 控制 | W12–14 | 14.0 h | 16.8 |
 | P5 證據 | W15–18 | 24.5 h | 29.4 |
 | P6 報告 | W19–22 | 38.0 h | 45.6 |
-| **總計** | 22 週 | **184.3 h** | **221.2 h** |
+| **總計** | 22 週 | **208.3 h** | **250.0 h** |
 
-`CATCHUP_PLAN.md` 假設 15–20 h/週 × 20 週 = 300–400 h。計劃用 221 h，**剩 79–179 h 係 buffer**，剛好覆蓋 figure 抽取重做同人評超時 —— 所以呢個 profile 係緊但有餘，唔需要再收窄 scope。
+`CATCHUP_PLAN.md` 假設 15–20 h/週 × 20 週 = 300–400 h。計劃用 250 h，**剩 50–150 h 係 buffer**，剛好覆蓋 figure 抽取重做同人評超時 —— 所以呢個 profile 係緊但有餘，唔需要再收窄 scope。
 
 ---
 
@@ -239,4 +261,5 @@ P2.1–P2.7 (rulebook 凍結)
 |---|---|---|
 | D1 | **單人定小組？** brief p5 列三位同學，`CATCHUP_PLAN.md` 寫單人 | 決定 P0.11 問 supervisor 的第一條，亦決定 scope 收窄表要唔要入 proposal |
 | D2 | **人手 deck 從邊嚟？** P2.19 要靠「人手做的 deck」做區辨效度的上界 | 冇語料就冇 GO/NO-GO；DECKBench 有 1,200 張 slide、PPTAgent 有 released decks，要現在確認可唔可以取得 |
+| D4 | **用邊個 LLM / provider？有冇 API key？** 現時環境冇 `OPENAI_API_KEY` | 冇 key 就 L3 之後卡住；L1–L2 可以先用 mock 做 |
 | D3 | **G6 留唔留？** proposal 自己講 G6 係 convention、冇證據 | 若 reviewer 追問，要有答案：留（因為 sweep 過、可分解）定降為 warning |

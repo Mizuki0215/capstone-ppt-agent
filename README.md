@@ -20,6 +20,7 @@ signal, plus a study of what that measurement is worth.
 | | |
 |---|---|
 | Pipeline (parse → compose → render) | working; 2 papers rendered end-to-end |
+| Generation layer | heuristic only; LLM stages designed in `docs/llm_plan.md`, not yet built |
 | Detector | **4 of 6 gates** — G1 containment, G2 overlap, G3 font size, G6 density |
 | Gates still missing | **G4 contrast** (WCAG 2.2 AA), **G5 text fit** (rendered height) |
 | First measurement | `build/detect_v1.json` — DOC2PPT, 9 slides, 0 clean, SRR 0.0 |
@@ -27,7 +28,7 @@ signal, plus a study of what that measurement is worth.
 | Test set, labels, baselines, human study | not started |
 | Proposal | EN + ZH, DOCX + PDF, 6 pp |
 
-The plan and its 81 jobs: **[WBS.md](WBS.md)**.
+Plan: **[WBS.md](WBS.md)** (93 jobs, 208 h) · generation layer: **[docs/llm_plan.md](docs/llm_plan.md)**
 
 ## Layout
 
@@ -43,7 +44,9 @@ docs/           proposal EN/ZH (.docx/.pdf) + the scripts that build them
 research/       literature: 35 indexed papers, notes; PDFs are not committed
 deck/           proposal deck builder and its outputs
 rulebook.md     the violation rulebook — every gate as a decision procedure
-WBS.md          work breakdown, 81 jobs, 22-week calendar
+scripts/        fetch_papers.py — rebuild the paper corpus from arXiv ids
+WBS.md          work breakdown, 93 jobs, 22-week calendar
+docs/llm_plan.md   how outline → bullets → speaker notes are generated
 ```
 
 ## Running the pipeline
