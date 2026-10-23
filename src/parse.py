@@ -19,7 +19,20 @@ HEADING_PAT = re.compile(
     re.I,
 )
 NUMBERED = re.compile(r"^\d+(\.\d+)*\s+[A-Z]")
+NUMBERING = re.compile(r"^\d{1,2}(?:\.\d+)*\.?\s+")
 CAPTION = re.compile(r"^(figure|fig\.?|table)\s*\d+", re.I)
+
+
+def clean_heading(title):
+    r"""Drop a leading section number: "1. Introduction" -> "Introduction".
+
+    The separator must be whitespace, so "5G Networks" and "2023 Results" keep
+    their leading number. An earlier version stripped only `\d+`, which turned
+    "1. Introduction" into ". Introduction" on any paper that numbers sections
+    with a dot (AISSA in our corpus).
+    """
+    out = NUMBERING.sub("", title.strip()).strip()
+    return out or title.strip()
 
 
 def lines(doc):
@@ -121,7 +134,7 @@ def main():
         if len(body) < 80:
             continue
         out_sections.append({
-            "title": re.sub(r"^\d+(\.\d+)*\s*", "", s["title"]).strip(),
+            "title": clean_heading(s["title"]),
             "page": s["page"],
             "text": body,
         })

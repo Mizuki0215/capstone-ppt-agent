@@ -79,7 +79,7 @@ def section_type(title: str) -> SectionType | None:
     None is not a fallback: a section that does not map cannot carry claims,
     because we have no rule for how long it should get.
     """
-    t = re.sub(r"^\d+(?:\.\d+)*\.?\s*", "", (title or "").strip()).lower()
+    t = re.sub(r"^\d{1,2}(?:\.\d+)*\.?\s+", "", (title or "").strip()).lower()
     for st, pat in SECTION_PATTERNS:
         if re.match(pat, t):
             return st
