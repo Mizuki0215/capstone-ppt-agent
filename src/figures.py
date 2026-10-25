@@ -4,17 +4,17 @@
 Why not pull embedded images: in the corpus the real figures are vector
 drawings. On PPTAgent p2 there are 39 embedded images (icons, 32x32) and 160
 drawing paths; the actual Figure 2 is a set of paths. Extracting "the images"
-therefore yields icons, or nothing (0/10 captions matched in a probe). So each
-figure is *clipped and rendered* instead.
+therefore yields icons, or nothing. So each figure is *clipped and rendered*.
 
-The rule, as specified: a block's extent is where ink stops being white.
+The rule: a block's extent is where ink stops being white.
   1. find the caption block ("Figure 3: ..." / "Table 2: ...")
-  2. take the vertical band above it, bounded by the nearest body-text block in
-     the same column, so a paragraph above the caption is never swallowed
+  2. take the vertical band above it, bounded by the nearest body-text paragraph
+     in the same column, so a paragraph above the caption is never swallowed
   3. rasterise that band and keep the bounding box of non-white pixels
   4. clip-render at FIGURE_DPI and save
 
-Output record adds three fields to the figure dict: image, bbox, area.
+The same bands are handed to parse.py, which uses them to drop text drawn
+inside a figure ("Text Encoder", "Image Encoder") from the body text.
 """
 from __future__ import annotations
 
@@ -29,15 +29,32 @@ FIGURE_DPI = 200
 MIN_W, MIN_H = 150.0, 100.0      # pt; below this it is a rule, a logo or a letter
 MIN_BAND_H = 40.0
 WHITE_CUTOFF = 250               # a channel below this counts as ink
+GAP_RATIO = 0.12                 # of the font size; below this, spans are one word
+
+LIGATURES = {"\ufb00": "ff", "\ufb01": "fi", "\ufb02": "fl",
+             "\ufb03": "ffi", "\ufb04": "ffl"}
 
 
-def join_spans(spans, gap_ratio: float = 0.25) -> str:
+def deligature(text: str) -> str:
+    """PDFs encode "fi" as U+FB01. Left alone, "significant" reaches a slide as
+    "signicant" and every evidence comparison downstream fails."""
+    for bad, good in LIGATURES.items():
+        if bad in text:
+            text = text.replace(bad, good)
+    return text
+
+
+def _block_text(block) -> str:
+    lines = [join_spans(line.get("spans", [])) for line in block.get("lines", [])]
+    return re.sub(r"\s+", " ", " ".join(l for l in lines if l)).strip()
+
+
+def join_spans(spans, gap_ratio: float = GAP_RATIO) -> str:
     """Join a line's spans, inserting a space only where the PDF left a gap.
 
     Neither extreme works: joining with "" turns "PPTA|GENT" (a word split by
     kerning) into "PPTAGENT" but also "Stage|I:" into "StageI"; joining with " "
-    does the opposite. The horizontal gap between span boxes distinguishes them:
-    a gap wider than a quarter of the font size is a space.
+    does the opposite. The horizontal gap between span boxes distinguishes them.
     """
     out: list[str] = []
     prev_x1 = None
@@ -51,12 +68,7 @@ def join_spans(spans, gap_ratio: float = 0.25) -> str:
         out.append(text)
         prev_x1 = sp["bbox"][2]
         prev_size = size
-    return re.sub(r"\s+", " ", "".join(out)).strip()
-
-
-def _block_text(block) -> str:
-    lines = [join_spans(line.get("spans", [])) for line in block.get("lines", [])]
-    return re.sub(r"\s+", " ", " ".join(l for l in lines if l)).strip()
+    return deligature(re.sub(r"\s+", " ", "".join(out)).strip())
 
 
 def text_blocks(page) -> list[tuple[pymupdf.Rect, str]]:
@@ -91,7 +103,7 @@ def is_paragraph(rect, text) -> bool:
 
     This is the correction that matters: figures carry their own text ("Stage I:
     Presentation Analysis"), and stopping at *any* text block cut the band off
-    inside the figure, so 33 of 35 captions produced no image. A paragraph has
+    inside the figure, so most captions produced no image. A paragraph has
     several words and real height; a label does not.
     """
     return len(text.split()) >= 8 and rect.height >= 18
@@ -104,6 +116,20 @@ def figure_band(page_rect, cap_rect, blocks, margin=36.0):
         if rect.y1 <= cap_rect.y0 + 1 and same_column(rect, cap_rect) and is_paragraph(rect, text):
             top = max(top, rect.y1)
     return pymupdf.Rect(cap_rect.x0, top, cap_rect.x1, cap_rect.y0 - 2)
+
+
+def page_bands(page) -> list[tuple[pymupdf.Rect, pymupdf.Rect]]:
+    """[(caption_rect, band)] for one page."""
+    blocks = text_blocks(page)
+    return [(rect, figure_band(page.rect, rect, blocks)) for rect, _ in find_captions(page)]
+
+
+def figure_bands(doc) -> dict[int, list[pymupdf.Rect]]:
+    """{page_number: [band]} - used by parse.py to drop text drawn inside figures."""
+    out: dict[int, list[pymupdf.Rect]] = {}
+    for pno, page in enumerate(doc, start=1):
+        out[pno] = [band for _cap, band in page_bands(page)]
+    return out
 
 
 def ink_bbox(page, band: pymupdf.Rect):
@@ -127,19 +153,18 @@ def extract(pdf_path: str, out_dir: Path, stem: str) -> list[dict]:
     out_dir.mkdir(parents=True, exist_ok=True)
     records = []
     for pno, page in enumerate(doc, start=1):
-        blocks = text_blocks(page)
-        for i, (cap_rect, caption) in enumerate(find_captions(page), start=1):
-            band = figure_band(page.rect, cap_rect, blocks)
+        bands = page_bands(page)
+        captions = [c for c, _ in find_captions(page)]
+        for i, ((cap_rect, caption), (_c2, band)) in enumerate(zip(find_captions(page), bands), start=1):
             box = ink_bbox(page, band)
             if box is None:
                 continue
-            w, h = box.width, box.height
             pad = 4.0
-            clip = pymupdf.Rect(box.x0 - pad, box.y0 - pad, box.x1 + pad, box.y1 + pad)
-            clip = clip & page.rect
+            clip = pymupdf.Rect(box.x0 - pad, box.y0 - pad, box.x1 + pad, box.y1 + pad) & page.rect
             if clip.width < MIN_W or clip.height < MIN_H:
                 continue
-            name = f"p{pno:02d}_{i:02d}_{'table' if caption.lower().startswith('table') else 'figure'}.png"
+            kind = "table" if caption.lower().startswith("table") else "figure"
+            name = f"p{pno:02d}_{i:02d}_{kind}.png"
             dest = out_dir / name
             page.get_pixmap(clip=clip, dpi=FIGURE_DPI).save(dest)
             records.append({
