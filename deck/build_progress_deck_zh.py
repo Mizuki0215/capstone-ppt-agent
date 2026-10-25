@@ -425,8 +425,31 @@ def slide_results(prs):
     return s
 
 
+def slide_console(prs):
+    s = page(prs, "實際執行", "整條 pipeline 跑得完，而且會老實地報錯", 10)
+    img = IMG / "console_run.png"
+    if img.exists():
+        s.shapes.add_picture(str(img), Inches(0.95), Inches(1.80), width=Inches(8.30))
+        tf = tb(s, 0.95, 7.06, 8.3, 0.3)
+        write(tf, "真實終端輸出；中間幾行省略。", 8, GREY, first=True, italic=True)
+    notes = [
+        ("parse", "8 個章節、24 個圖說、裁出 11 張圖"),
+        ("compose", "8 張 slide，每張 90 秒"),
+        ("render", "9 頁 deck，原生可編輯"),
+        ("detect", "32 個違規，SRR 0.00"),
+        ("pytest", "76 個測試全綠"),
+    ]
+    y = 1.90
+    for head, body in notes:
+        tf = tb(s, 9.65, y, 3.2, 0.78)
+        write(tf, head, 10, GOLD, True, first=True)
+        write(tf, body, 9, INK2, space=1, line=1.25)
+        y += 0.92
+    return s
+
+
 def slide_status(prs):
-    s = page(prs, "狀態", "做好了什麼，下一步是什麼", 10)
+    s = page(prs, "狀態", "做好了什麼，下一步是什麼", 11)
     groups = [
         ("已做好並有測試", GREEN, ["parse：章節、圖、圖說",
                                      "裁圖：樣本上 32 個圖說成功 12 個",
@@ -459,7 +482,7 @@ def slide_status(prs):
 
 
 def slide_plan(prs):
-    s = page(prs, "計劃", "實驗設計，與時間表", 11)
+    s = page(prs, "計劃", "實驗設計，與時間表", 12)
     # 2x2
     tf = tb(s, 0.95, 1.80, 5.6, 0.35)
     write(tf, "設計：2 × 2 因子", 12.5, INK, True, first=True)
@@ -485,7 +508,7 @@ def slide_plan(prs):
 
 
 def slide_asks(prs):
-    s = page(prs, "需要你的意見", "三個決定，一個問題", 12)
+    s = page(prs, "需要你的意見", "三個決定，一個問題", 13)
     items = [
         ("1", "人手 deck", "哪裡可以拿到作者真正上台用的 deck？它是效度檢查的上界，而我手上完全沒有。"),
         ("2", "範圍", "單欄英文論文、10–12 張、8 篇 held-out —— 這樣窄到做得完，還是窄到不能推廣？"),
@@ -519,6 +542,7 @@ def main():
     slide_select(prs)
     slide_measure(prs)
     slide_results(prs)
+    slide_console(prs)
     slide_status(prs)
     slide_plan(prs)
     slide_asks(prs)

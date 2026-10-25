@@ -453,8 +453,32 @@ def slide_results(prs):
     return s
 
 
+def slide_console(prs):
+    s = page(prs, "the run", "It runs end to end, and it fails honestly", 10)
+    img = IMG / "console_run.png"
+    if img.exists():
+        s.shapes.add_picture(str(img), Inches(0.95), Inches(1.80), width=Inches(8.30))
+        tf = tb(s, 0.95, 7.06, 8.3, 0.3)
+        write(tf, "Real terminal output; rows in the middle are elided.", 8, GREY,
+              first=True, italic=True)
+    notes = [
+        ("parse", "8 sections, 24 captions, 11 figures clipped"),
+        ("compose", "8 slides, 90 seconds each"),
+        ("render", "a 9-slide deck, native and editable"),
+        ("detect", "32 violations, SRR 0.00"),
+        ("pytest", "76 cases green"),
+    ]
+    y = 1.90
+    for head, body in notes:
+        tf = tb(s, 9.65, y, 3.2, 0.75)
+        write(tf, head, 10, GOLD, True, first=True)
+        write(tf, body, 9, INK2, space=1, line=1.25)
+        y += 0.92
+    return s
+
+
 def slide_status(prs):
-    s = page(prs, "status", "What is built, what is next", 10)
+    s = page(prs, "status", "What is built, what is next", 11)
     groups = [
         ("Built and tested", GREEN, ["parse: sections, figures, captions",
                                      "figure clipping, 12/32 on the sample",
@@ -487,7 +511,7 @@ def slide_status(prs):
 
 
 def slide_plan(prs):
-    s = page(prs, "plan", "The experiment, and the calendar", 11)
+    s = page(prs, "plan", "The experiment, and the calendar", 12)
     # 2x2
     tf = tb(s, 0.95, 1.80, 5.6, 0.35)
     write(tf, "The design: a 2 x 2 factor", 12.5, INK, True, first=True)
@@ -517,7 +541,7 @@ def slide_plan(prs):
 
 
 def slide_asks(prs):
-    s = page(prs, "what I need from you", "Three decisions and one question", 12)
+    s = page(prs, "what I need from you", "Three decisions and one question", 13)
     items = [
         ("1", "Human decks", "Where can I get decks an author actually presented? "
                              "They are the upper bound in the validity check, and I have none."),
@@ -555,6 +579,7 @@ def main():
     slide_select(prs)
     slide_measure(prs)
     slide_results(prs)
+    slide_console(prs)
     slide_status(prs)
     slide_plan(prs)
     slide_asks(prs)

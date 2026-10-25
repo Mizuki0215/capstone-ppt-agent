@@ -4,7 +4,7 @@
   {
    "title": "Abstract",
    "bullets": [
-    "We propose a hierarchical sequence-to-sequence approach to tackle our task in an end-to-end manner",
+    "We propose a hierarchical sequence-tosequence approach to tackle our task in an end-to-end manner",
     "Can machines learn to emulate this laborious process?",
     "Our approach exploits the inherent structures within documents and slides and incorporates paraphrasing and ...",
     "We show that our approach outperforms strong baselines and produces slides with rich content ...",
@@ -12,8 +12,20 @@
     "Creating presentation materials requires complex multimodal reasoning skills to summarize key concepts and arrange ..."
    ],
    "source_page": 1,
+   "figure": {
+    "caption": "Figure 1: We introduce DOC2PPT, a novel task of gener- ating a slide deck from a document. This requires solving several challenges in the vision-and-language domain, e.g., visual-semantic embedding and multimodal summarization. In addition, slides exhibit unique properties such as concise text (bullet points) and stylized layout.",
+    "page": "1",
+    "image": "build/figures/DOC2PPT_2101.11796/p01_01_figure.png",
+    "bbox": [
+     339.9,
+     167.2,
+     537.6,
+     386.6
+    ],
+    "area": 43364
+   },
    "seconds": 90,
-   "notes": "This slide covers abstract. Open with: We propose a hierarchical sequence-to-sequence approach to tackle our task in an end-to-end manner. Then move to: Can machines learn to emulate this laborious process?. Target roughly 90 seconds here."
+   "notes": "This slide covers abstract. Open with: We propose a hierarchical sequence-tosequence approach to tackle our task in an end-to-end manner. Then move to: Can machines learn to emulate this laborious process?. Target roughly 90 seconds here."
   },
   {
    "title": "Introduction",
@@ -23,7 +35,7 @@
     "This requires solving several challenges in the vision-and-language domain, e.g., visual-semantic embedding and multimodal ...",
     "Lastly, we explore both template-based and learning-based layout design and compare them both quantitatively ...",
     "It requires skills to abstract complex concepts and conveys them in a concise and ...",
-    "Furthermore, none of the above addresses the challenge of \ufb01nd-ing an optimal visual layout ..."
+    "Furthermore, none of the above addresses the challenge of \ufb01nding an optimal visual layout ..."
    ],
    "source_page": 1,
    "seconds": 90,
@@ -40,7 +52,18 @@
     "Our task involves generating slides with relevant text and \ufb01gures"
    ],
    "source_page": 2,
-   "figure": "Figure 1: We introduce DOC2PPT, a novel task of gener-",
+   "figure": {
+    "caption": "Figure 2: An overview of our architecture. It consists of modules (DR, PT, OP, PAR) that read a document and gen- erate a slide deck in a hierarchically structured manner.",
+    "page": "3",
+    "image": "build/figures/DOC2PPT_2101.11796/p03_01_figure.png",
+    "bbox": [
+     62.2,
+     50.0,
+     283.9,
+     269.8
+    ],
+    "area": 48723
+   },
    "seconds": 90,
    "notes": "This slide covers related work. Open with: We propose a large dataset of 5,873 pairs of high-quality scienti\ufb01c documents and slide .... Then move to: Learning text-image similarity has been studied in the visual-semantic embedding (VSE) literature (Karpathy and .... Target roughly 90 seconds here."
   },
@@ -64,7 +87,7 @@
     "DOC2PPT is a new task with no established evaluation metrics and baselines",
     "We carefully ablate various components of our approach and evaluate them on our proposed ...",
     "We propose automatic metrics speci\ufb01- cally designed for evaluating slide generation methods",
-    "We also perform hu-man evaluation to assess the generation quality"
+    "We also perform human evaluation to assess the generation quality"
    ],
    "source_page": 5,
    "seconds": 90,
@@ -76,7 +99,7 @@
     "Each layer of the PT is based on a 256-unit GRU",
     "Implementation Detail For the DR, we use a Bi-GRU with 1,024 hidden units and ...",
     "The PAR is designed as Seq2Seq with 512-unit GRU",
-    "Therefore, we propose the slide-level ROUGE: ROUGE-SL = ROUGE-L \u00d7 e |Q\u2212\u02dc Q| Q ...",
+    "Therefore, we propose the slide-level ROUGE: ROUGE-SL = ROUGE-L \u00d7 e |Q\u2212 \u02dc Q| ...",
     "Intuitively, the number of slides in a deck is a good proxy for the ...",
     "Ablation Settings ROUGE-SL LC-FS TFR mIoU Hrch-PT PAR TIM Post Proc"
    ],
