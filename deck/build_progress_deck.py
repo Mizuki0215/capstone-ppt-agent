@@ -400,31 +400,36 @@ def slide_measure(prs):
         ["G4 contrast", "WCAG 2.2 AA, fill against background", "4.5 : 1", "next"],
         ["G5 text fit", "rendered height over box height", "<= 0.95", "next"],
     ]
-    t = table(s, ["gate", "rule", "threshold", "state"], rows, 0.95, 1.85, 7.6,
-              [1.9, 3.3, 1.2, 1.2], size=10, head=10, row_h=0.42)
+    t = table(s, ["gate", "rule", "threshold", "state"], rows, 0.95, 1.85, 7.45,
+              [1.85, 3.25, 1.15, 1.2], size=9.6, head=9.6, row_h=0.42)
     for r in range(1, len(rows) + 1):
         cell = t.cell(r, 3)
-        cell.text_frame.clear()          # table() already wrote it; colour it once
+        cell.text_frame.clear()
         state = rows[r - 1][3]
-        write(cell.text_frame, state, 10, GREEN if state == "built" else
+        write(cell.text_frame, state, 9.6, GREEN if state == "built" else
               (AMBER if "global" in state else RED), True, first=True)
 
-    rect(s, 8.85, 1.85, 3.95, 1.55, fill=PANEL)
-    tf = tb(s, 9.1, 2.02, 3.5, 1.2)
-    write(tf, "SRR", 16, INK, True, first=True)
-    write(tf, "Equal-weight pass rate over decidable checks. No gate weight is fitted; "
-              "unknown checks leave the average but block deck-ready.", 10, INK2, space=6,
-          line=1.3)
-    rect(s, 8.85, 3.60, 3.95, 1.55, fill=PANEL)
-    tf = tb(s, 9.1, 3.77, 3.5, 1.2)
-    write(tf, "Why no weights", 13, INK, True, first=True)
-    write(tf, "A weight would be a number with no evidence behind it - the same objection "
-              "the report makes to the 24-point rule.", 10, INK2, space=6, line=1.3)
-    tf = tb(s, 0.95, 5.35, 11.9, 1.2)
-    write(tf, "G4 and G5 are the two that need real resolution: colour has to be resolved "
-              "through the theme and z-order, and text height has to be estimated from font "
-              "metrics. Both are scheduled before the loop is built, because a metric that "
-              "cannot be trusted cannot be the signal.", 10.5, GREY, first=True, line=1.35)
+    rect(s, 8.55, 1.85, 3.85, 1.92, fill=PANEL)
+    tf = tb(s, 8.80, 1.98, 3.40, 1.7)
+    write(tf, "SRR", 15, INK, True, first=True)
+    write(tf, "SRR = \u03a3 P / \u03a3 J", 12.5, INK, space=5)
+    write(tf, "J = checks that could be judged, P = those that passed. "
+              "One weight per check; none is fitted.", 8.4, INK2, space=5, line=1.25)
+
+    rect(s, 8.55, 3.92, 3.85, 1.50, fill=PANEL)
+    tf = tb(s, 8.80, 4.04, 3.40, 1.3)
+    write(tf, "unknown is not n/a", 10.5, INK, True, first=True)
+    write(tf, "n/a: does not apply - one text box, so no G2 pair", 8.2, INK2, space=4, line=1.2)
+    write(tf, "unknown: applies but cannot be computed - image background", 8.2, INK2,
+          space=3, line=1.2)
+    write(tf, "both leave the denominator, both carry a reason code", 8.2, GREY,
+          space=3, line=1.2)
+
+    rect(s, 0.95, 5.58, 11.45, 0.92, fill=PANEL2)
+    rect(s, 0.95, 5.58, 0.07, 0.92, fill=GOLD)
+    tf = tb(s, 1.28, 5.70, 10.9, 0.75)
+    write(tf, "deck-ready = no failure anywhere, and every gate judged at least once. "
+              "A title slide does not need G6; the deck does.", 10.5, INK, first=True, line=1.3)
     return s
 
 
