@@ -402,8 +402,51 @@ def slide_measure(prs):
     return s
 
 
+def slide_space(prs):
+    s = page(prs, "範圍", "可以量的有 65 項，值得做的有 6 項", 9)
+    rows = [["A  版面幾何", "14"], ["B  字體與排版", "15"],
+            ["C  顏色與對比", "7"], ["D  內容與語意", "12"],
+            ["E  結構", "8"], ["F  渲染", "5"], ["G  觀眾", "4"],
+            ["合計", "65"]]
+    t = table(s, ["候選", "數量"], rows, 0.95, 1.85, 3.9, [2.9, 1.0],
+              size=9.5, head=9, row_h=0.34)
+    for r in range(1, len(rows) + 1):
+        if rows[r - 1][0] == "合計":
+            c0, c1 = t.cell(r, 0), t.cell(r, 1)
+            c0.text_frame.clear()
+            c1.text_frame.clear()
+            write(c0.text_frame, "合計", 9.5, INK, True, first=True)
+            write(c1.text_frame, "65", 9.5, GOLD, True, first=True)
+
+    tf = tb(s, 5.25, 1.85, 3.1, 0.35)
+    write(tf, "五個條件", 11, INK, True, first=True)
+    tests = ["可判定：不需要參考答案",
+             "確定性：同一份檔案同一個分數",
+             "違規就是變壞，不是不同",
+             "便宜到可以跑在迴圈裡",
+             "可解釋：指得出形狀、數值、門檻"]
+    tf = tb(s, 5.25, 2.25, 3.15, 2.4)
+    for i, item in enumerate(tests):
+        write(tf, "-  " + item, 9, INK2, first=(i == 0), space=0 if i == 0 else 7,
+              line=1.2)
+
+    tf = tb(s, 8.65, 1.85, 3.75, 0.35)
+    write(tf, "最後留下的", 11, INK, True, first=True)
+    rows2 = [["G1 出界", "A1"], ["G2 重疊", "A2"], ["G3 字級", "B1"],
+             ["G4 對比", "C1"], ["G5 文字溢出", "B7"], ["G6 密度", "B5+B6"]]
+    table(s, ["gate", "來源"], rows2, 8.65, 2.25, 3.75, [2.85, 0.9],
+          size=9.5, head=9, row_h=0.33)
+
+    rect(s, 0.95, 5.55, 11.9, 1.15, fill=PANEL2)
+    rect(s, 0.95, 5.55, 0.07, 1.15, fill=RED)
+    tf = tb(s, 1.28, 5.70, 11.3, 0.9)
+    write(tf, "而它看不見什麼：一句 bullet 可以語法正確、長度正常、字級正確 —— 而完全冇意義。"
+              "這就是機械式量度的邊界，屬於人評。", 11, INK, first=True, line=1.3)
+    return s
+
+
 def slide_results(prs):
-    s = page(prs, "目前結果", "每一張生成出來的 slide 都至少違反一個 gate", 9)
+    s = page(prs, "目前結果", "每一張生成出來的 slide 都至少違反一個 gate", 10)
     img = IMG / "slide02.png"
     if img.exists():
         s.shapes.add_picture(str(img), Inches(0.95), Inches(1.80), width=Inches(6.85))
@@ -426,7 +469,7 @@ def slide_results(prs):
 
 
 def slide_console(prs):
-    s = page(prs, "實際執行", "整條 pipeline 跑得完，而且會老實地報錯", 10)
+    s = page(prs, "實際執行", "整條 pipeline 跑得完，而且會老實地報錯", 11)
     img = IMG / "console_run.png"
     if img.exists():
         s.shapes.add_picture(str(img), Inches(0.95), Inches(1.80), width=Inches(8.30))
@@ -449,7 +492,7 @@ def slide_console(prs):
 
 
 def slide_status(prs):
-    s = page(prs, "狀態", "做好了什麼，下一步是什麼", 11)
+    s = page(prs, "狀態", "做好了什麼，下一步是什麼", 12)
     groups = [
         ("已做好並有測試", GREEN, ["parse：章節、圖、圖說",
                                      "裁圖：樣本上 32 個圖說成功 12 個",
@@ -482,7 +525,7 @@ def slide_status(prs):
 
 
 def slide_plan(prs):
-    s = page(prs, "計劃", "實驗設計，與時間表", 12)
+    s = page(prs, "計劃", "實驗設計，與時間表", 13)
     # 2x2
     tf = tb(s, 0.95, 1.80, 5.6, 0.35)
     write(tf, "設計：2 × 2 因子", 12.5, INK, True, first=True)
@@ -508,7 +551,7 @@ def slide_plan(prs):
 
 
 def slide_asks(prs):
-    s = page(prs, "需要你的意見", "三個決定，一個問題", 13)
+    s = page(prs, "需要你的意見", "三個決定，一個問題", 14)
     items = [
         ("1", "人手 deck", "哪裡可以拿到作者真正上台用的 deck？它是效度檢查的上界，而我手上完全沒有。"),
         ("2", "範圍", "單欄英文論文、10–12 張、8 篇 held-out —— 這樣窄到做得完，還是窄到不能推廣？"),
@@ -541,6 +584,7 @@ def main():
     slide_parse(prs)
     slide_select(prs)
     slide_measure(prs)
+    slide_space(prs)
     slide_results(prs)
     slide_console(prs)
     slide_status(prs)

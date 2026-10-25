@@ -1,0 +1,176 @@
+{
+ "title": "DOC2PPT: Automatic Presentation Slides Generation from Scienti\ufb01c Documents",
+ "slides": [
+  {
+   "title": "Abstract",
+   "bullets": [
+    "We propose a hierarchical sequence-tosequence approach to tackle our task in an end-to-end manner",
+    "Can machines learn to emulate this laborious process?",
+    "Our approach exploits the inherent structures within documents and slides and incorporates paraphrasing and ...",
+    "We show that our approach outperforms strong baselines and produces slides with rich content ...",
+    "We present a novel task and approach for document-to-slide generation",
+    "Creating presentation materials requires complex multimodal reasoning skills to summarize key concepts and arrange ..."
+   ],
+   "source_page": 1,
+   "figure": {
+    "caption": "Figure 1: We introduce DOC2PPT, a novel task of gener- ating a slide deck from a document. This requires solving several challenges in the vision-and-language domain, e.g., visual-semantic embedding and multimodal summarization. In addition, slides exhibit unique properties such as concise text (bullet points) and stylized layout.",
+    "page": "1",
+    "image": "build/figures/DOC2PPT_2101.11796/p01_01_figure.png",
+    "bbox": [
+     339.9,
+     167.0,
+     537.6,
+     386.5
+    ],
+    "area": 43391
+   },
+   "seconds": 65,
+   "notes": "This slide covers abstract. Open with: We propose a hierarchical sequence-tosequence approach to tackle our task in an end-to-end manner. Then move to: Can machines learn to emulate this laborious process?. Target roughly 65 seconds here."
+  },
+  {
+   "title": "Introduction",
+   "bullets": [
+    "We hope that our DOC2PPT will advance the state-of-the-art in the vision-and-language domain",
+    "In this paper, we introduce DOC2PPT, a novel task of creating presentation slides from ...",
+    "Lastly, we explore both template-based and learning-based layout design and compare them both quantitatively ...",
+    "It requires skills to abstract complex concepts and conveys them in a concise and ...",
+    "Furthermore, none of the above addresses the challenge of finding an optimal visual layout ...",
+    "These aspects make ours a unique task in the vision-and-language literature"
+   ],
+   "source_page": 1,
+   "seconds": 65,
+   "notes": "This slide covers introduction. Open with: We hope that our DOC2PPT will advance the state-of-the-art in the vision-and-language domain. Then move to: In this paper, we introduce DOC2PPT, a novel task of creating presentation slides from .... Target roughly 65 seconds here."
+  },
+  {
+   "title": "Related Work",
+   "bullets": [
+    "We propose a large dataset of 5,873 pairs of high-quality scientific documents and slide ...",
+    "Learning text-image similarity has been studied in the visual-semantic embedding (VSE) literature (Karpathy and ...",
+    "As argued above, our task brings a new suite of challenges to vision-and-language understanding",
+    "Furthermore, existing datasets in this domain (such as TalkSumm (Lev et al",
+    "Joint modeling of vision-andlanguage has been studied from different angles",
+    "Our task involves generating slides with relevant text and figures"
+   ],
+   "source_page": 2,
+   "figure": {
+    "caption": "Figure 2: An overview of our architecture. It consists of modules (DR, PT, OP, PAR) that read a document and gen- erate a slide deck in a hierarchically structured manner.",
+    "page": "3",
+    "image": "build/figures/DOC2PPT_2101.11796/p03_01_figure.png",
+    "bbox": [
+     62.2,
+     50.0,
+     284.3,
+     269.8
+    ],
+    "area": 48818
+   },
+   "seconds": 65,
+   "notes": "This slide covers related work. Open with: We propose a large dataset of 5,873 pairs of high-quality scientific documents and slide .... Then move to: Learning text-image similarity has been studied in the visual-semantic embedding (VSE) literature (Karpathy and .... Target roughly 65 seconds here."
+  },
+  {
+   "title": "Approach",
+   "bullets": [
+    "The goal of DOC2PPT is to generate a slide deck from a multimodal document ...",
+    "This is a natural choice to encode our prior knowledge about the hierarchical structure",
+    "We do not assign figures to any particular section because multiple sections can reference ...",
+    "This step is crucial because without it the text would be too verbose for ...",
+    "Given the multi-objective nature of the task, we design our network with modularized components ...",
+    "We paraphrase sentences before placing them on slides"
+   ],
+   "source_page": 2,
+   "seconds": 65,
+   "notes": "This slide covers approach. Open with: The goal of DOC2PPT is to generate a slide deck from a multimodal document .... Then move to: This is a natural choice to encode our prior knowledge about the hierarchical structure. Target roughly 65 seconds here."
+  },
+  {
+   "title": "Training",
+   "bullets": [
+    "While there exist several solutions to bounding box regression (He et al",
+    "This term is slide-insensitive, i.e., the correct/incorrect inclusion is not affected by which specific ...",
+    "Text-Figure matching loss (\u03b4([Etxt u , Efig v ]))",
+    "We follow the literature on visual-semantic embedding and learn an additional multimodal projection head ...",
+    "The series of actions asec j and aslide k determines the structure of output ...",
+    "The third term measures the relevance of text and figures appearing in the same ..."
+   ],
+   "source_page": 4,
+   "seconds": 65,
+   "notes": "This slide covers training. Open with: While there exist several solutions to bounding box regression (He et al. Then move to: This term is slide-insensitive, i.e., the correct/incorrect inclusion is not affected by which specific .... Target roughly 65 seconds here."
+  },
+  {
+   "title": "Inference",
+   "bullets": [
+    "We tune the two hyper-parameters \u03b8R and \u03b8A via cross-validation (we set \u03b8R = ...",
+    "The inference procedures during training and test times largely follow the same process, with ...",
+    "That is, once our model generates a slide deck, we remove figures that have ...",
+    "The inference procedures during training and test times largely follow the same process, with ..."
+   ],
+   "source_page": 4,
+   "seconds": 65,
+   "notes": "This slide covers inference. Open with: We tune the two hyper-parameters \u03b8R and \u03b8A via cross-validation (we set \u03b8R = .... Then move to: The inference procedures during training and test times largely follow the same process, with .... Target roughly 65 seconds here."
+  },
+  {
+   "title": "Dataset",
+   "bullets": [
+    "For simplicity, we discard F out if its highest visual embedding similarity is lower ...",
+    "Lastly, we match figures from slides to those in the corresponding document",
+    "Note that some figures in slides do not appear in the corresponding document (and ...",
+    "We limit the search space only within the corresponding sections using the slide-section matching ...",
+    "We match sentences from slides to the corresponding document",
+    "For each document D, we extract sections S and sentences T in using ScienceParse ..."
+   ],
+   "source_page": 4,
+   "seconds": 65,
+   "notes": "This slide covers dataset. Open with: For simplicity, we discard F out if its highest visual embedding similarity is lower .... Then move to: Lastly, we match figures from slides to those in the corresponding document. Target roughly 65 seconds here."
+  },
+  {
+   "title": "Experiments",
+   "bullets": [
+    "DOC2PPT is a new task with no established evaluation metrics and baselines",
+    "We carefully ablate various components of our approach and evaluate them on our proposed ...",
+    "We propose automatic metrics specifically designed for evaluating slide generation methods",
+    "We also perform human evaluation to assess the generation quality"
+   ],
+   "source_page": 5,
+   "seconds": 65,
+   "notes": "This slide covers experiments. Open with: DOC2PPT is a new task with no established evaluation metrics and baselines. Then move to: We carefully ablate various components of our approach and evaluate them on our proposed .... Target roughly 65 seconds here."
+  },
+  {
+   "title": "Evaluation Metrics",
+   "bullets": [
+    "Therefore, we propose the slide-level ROUGE: ROUGE-SL = ROUGE-L \u00d7 e |Q\u2212 \u02dc Q| ...",
+    "Intuitively, the number of slides in a deck is a good proxy for the ...",
+    "Ablation Settings ROUGE-SL LC-FS TFR mIoU Hrch-PT PAR TIM Post Proc",
+    "A good design layout makes it easy to consume information presented in slides",
+    "To measure the quality of text in the generated slides, we adapt the widelyused ...",
+    "To evaluate the layout quality, we adapt the mean intersection over union (mIoU) (Everingham ..."
+   ],
+   "source_page": 5,
+   "seconds": 65,
+   "notes": "This slide covers evaluation metrics. Open with: Therefore, we propose the slide-level ROUGE: ROUGE-SL = ROUGE-L \u00d7 e |Q\u2212 \u02dc Q| .... Then move to: Intuitively, the number of slides in a deck is a good proxy for the .... Target roughly 65 seconds here."
+  },
+  {
+   "title": "Implementation Detail",
+   "bullets": [
+    "Each layer of the PT is based on a 256-unit GRU",
+    "For the DR, we use a Bi-GRU with 1,024 hidden units and set the ...",
+    "The PAR is designed as Seq2Seq with 512-unit GRU",
+    "We train our network end-to-end using ADAM (Diederik P",
+    "All the MLPs are two-layer fullyconnected networks"
+   ],
+   "source_page": 6,
+   "seconds": 65,
+   "notes": "This slide covers implementation detail. Open with: Each layer of the PT is based on a 256-unit GRU. Then move to: For the DR, we use a Bi-GRU with 1,024 hidden units and set the .... Target roughly 65 seconds here."
+  },
+  {
+   "title": "Conclusion",
+   "bullets": [
+    "We release a large set of 5,873 paired documents and slide decks, and provide ...",
+    "We present a novel task and approach for generating slides from documents",
+    "We hope our work will help advance the state-of-the-art in vision-and-language understanding",
+    "This is a challenging multimodal task that involves understanding and summarizing documents containing text ..."
+   ],
+   "source_page": 7,
+   "seconds": 65,
+   "notes": "This slide covers conclusion. Open with: We release a large set of 5,873 paired documents and slide decks, and provide .... Then move to: We present a novel task and approach for generating slides from documents. Target roughly 65 seconds here."
+  }
+ ]
+}

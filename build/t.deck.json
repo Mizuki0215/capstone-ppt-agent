@@ -1,0 +1,228 @@
+{
+ "source": "research/pdfs/DOC2PPT_2101.11796.pdf",
+ "pymupdf": "2.0",
+ "title": "DOC2PPT: Automatic Presentation Slides Generation from Scientiﬁc Documents",
+ "pages": 15,
+ "median_font": 10.0,
+ "sections": [
+  {
+   "title": "Abstract",
+   "page": 1,
+   "text": "Creating presentation materials requires complex multimodal reasoning skills to summarize key concepts and arrange them in a logical and visually pleasing manner. Can machines learn to emulate this laborious process? We present a novel task and approach for document-to-slide generation. Solving this involves document summarization, image and text retrieval, and slide structure to arrange key elements in a form suit- able for presentation. We propose a hierarchical sequence-to- sequence approach to tackle our task in an end-to-end man- ner. Our approach exploits the inherent structures within doc- uments and slides and incorporates paraphrasing and layout prediction modules to generate slides. To help accelerate re- search in this domain, we release a dataset of about 6K paired documents and slide decks used in our experiments. We show that our approach outperforms strong baselines and produces slides with rich content and aligned imagery."
+  },
+  {
+   "title": "Introduction",
+   "page": 1,
+   "text": "Creating presentations is often a work of art. It requires skills to abstract complex concepts and conveys them in a con- cise and visually pleasing manner. Consider the steps in- volved in creating presentation slides based on a white pa- per or manuscript: One needs to 1) establish a storyline that will connect with the audience, 2) identify essential sections and components that support the main message, 3) delineate the structure of that content, e.g., the ordering/length of the sections, 4) summarize the content in a concise form, e.g., punchy bullet points, and 5) gather figures that help commu- nicate the message accurately and engagingly. Can machines emulate this laborious process by learn- ing from the plethora of example manuscripts and slide decks created by human experts? Building such a system poses unique challenges in vision-and-language understand- ing. Both the input (a manuscript) and output (a slide deck) contain tightly coupled visual and textual elements; thus, it requires multimodal reasoning. Further, there are significant differences in the presentation: compared to manuscripts, slides tend to be more concise (e.g., containing bullet points rather than full sentences), structured (e.g., each slide has a fixed screen real estate and delivers one or few messages), Intelligence (www.aaai.org). All rights reserved. In addition, slides exhibit unique properties such as concise text (bullet points) and stylized layout. and visual-centric (e.g., figures are first-class citizens, the visual layout plays an important role, etc.). Existing literature only partially addresses some of the challenges above. Document summarization (Cheng and La- pata 2016; Chopra, Auli, and Rush 2016) aims to find a con- cise text summary of the input, but it does not deal with images/figures and lacks multimodal understanding. Cross- modal retrieval (Frome et al. 2013; Kiros, Salakhutdinov, and Zemel 2014) focuses on finding a multimodal embed- ding space but does not produce summarized outputs. Mul- timodal summarization (Zhu et al. 2019) deals with both (summarizing documents with text and figures), but it lacks the ability to produce structured output (as in slides). Fur- thermore, none of the above addresses the challenge of find- ing an optimal visual layout of each slide. While assessing visual aesthetics have been investigated (Marchesotti et al. 2011), exiting work focuses on photographic metrics for im- ages that would not translate to slides. These aspects make ours a unique task in the vision-and-language literature. In this paper, we introduce DOC2PPT, a novel task of cre- ating presentation slides from scientific documents. As with no existing benchmark, we collect 5,873 paired scientific documents and associated presentation slide decks (for a to- tal of about 70K pages and 100K slides, respectively). We present a series of automatic data processing steps to extract useful learning signals and introduce new quantitative met- rics designed to measure the quality of the generated slides. To tackle this task, we present a hierarchical recurrent sequence-to-sequence architecture that “reads” the input document and “summarizes” it into a structured slide deck. We exploit the inherent structure within documents and slides by performing inference at the section-level (for docu- ments) and at the slide-level (for slides). To make our model end-to-end trainable, we explicitly encode section/slide em- beddings and use them to learn a policy that determines when to proceed to the next section/slide. Further, we learn the policy in a hierarchical manner so that the network de- cides which actions to take by considering the structural con- text, e.g., a decision to create a new slide will depend on both the current section and the previous generated content. To consider the concise nature of text in slides (e.g., bullet points), we incorporate a paraphrasing module that converts document-style full sentences to slide-style phrases/clauses. We show that it drastically improves the quality of the gener- ated textual content for the slides. In addition, we introduce a text-figure matching objective that encourages related text- figure pairs to appear on the same slide. Lastly, we explore both template-based and learning-based layout design and compare them both quantitatively and qualitatively. Taking a long-term view, our objective is not to take hu- mans completely out of the loop but enhance humans’ pro- ductivity by generating slides as drafts. This would create new opportunities to human-AI collaboration (Amershi et al. 2019), e.g., one could quickly create a slide deck by revis- ing the auto-generated draft and skim them through to di- gest lots of material. To summarize, our main contributions include: 1) Introducing a novel task, dataset, and evaluation metrics for automatic slide generation; 2) Proposing a hi- erarchical sequence-to-sequence approach that summarizes a document in a structure output format suitable for slide presentation; 3) Evaluating our approach both quantitatively, using our proposed metrics, and qualitatively based on hu- man evaluation. We hope that our DOC2PPT will advance the state-of-the-art in the vision-and-language domain."
+  },
+  {
+   "title": "Related Work",
+   "page": 2,
+   "text": "Vision-and-Language. Joint modeling of vision-and- language has been studied from different angles. Im- age/video captioning (Vinyals et al. 2016; You et al. 2016; Li et al. 2016; Xu et al. 2016), visual question answering (Jang et al. 2017; Agrawal et al. 2015; Anderson et al. 2018), and visually-grounded dialogue generation (Das et al. 2017) are all tasks that involve learning relationships between image and text. Despite this large body of work, there remain many tasks that have not been addressed, e.g., multimodal docu- ment generation. As argued above, our task brings a new suite of challenges to vision-and-language understanding. Document Summarization. This task has been tackled from two angles: abstractive (Chopra, Auli, and Rush 2016; See, Liu, and Manning 2017; Cho, Seo, and Hajishirzi 2019; Liu and Lapata 2019; Dong et al. 2019; Zhang et al. 2020; Celikyilmaz et al. 2018; Rush, Chopra, and Weston 2015; Liu et al. 2018; Paulus, Xiong, and Socher 2018) and extrac- tive (Barrios et al. 2015; Narayan, Cohen, and Lapata 2018; Liu 2019; Chen et al. 2018; Yin and Pei 2014; Cheng and Lapata 2016; Yasunaga et al. 2017). Our DOC2PPT task in- volves both abstractive and extractive summarization since it requires to extract the key content from a document and paraphrase it into a concise form. A task closely related to ours is scientific document summarization (Elkiss et al. 2008; Lloret, Rom´a-Ferri, and Palomar 2013; Hu and Wan 2013; Jaidka et al. 2016; Parveen, Mesgar, and Strube 2016; Sefid and Wu 2019), but to date that work has only focused on producing text summaries, while we focus on generat- ing multimedia slides. Furthermore, existing datasets in this domain (such as TalkSumm (Lev et al. 2019) and Scisumm- Net (Yasunaga et al. 2019)) are rather small with only about 1K documents each. We propose a large dataset of 5,873 pairs of high-quality scientific documents and slide decks. Visual-Semantic Embedding. Our task involves generat- ing slides with relevant text and figures. Learning text-image similarity has been studied in the visual-semantic embed- ding (VSE) literature (Karpathy and Fei-Fei 2014; Vendrov et al. 2016; Faghri et al. 2018; Huang, Wu, and Wang 2018; Gu et al. 2018; Song and Soleymani 2019). However, unlike the VSE setting where text instances are known in advance, ours requires simultaneously generating text and retrieving the related images at the same time. Multimodal Summarization. MSMO (Zhu et al. 2019, 2020; Li et al. 2020) generates textual summarization with related images for news articles. Similarly, our task includes summarizing multimodal documents, but it also involves putting the summary in a structured format such as slides."
+  },
+  {
+   "title": "Approach",
+   "page": 2,
+   "text": "The goal of DOC2PPT is to generate a slide deck from a mul- timodal document with text and figures.1 As shown in Fig. 1, the task involves “reading” a documen and summarizing it, paraphrasing the summarized sentences into a concise for- mat suitable for slide presentation, and placing the chosen text and figures to appropriate locations in the output slides. Overview. Given the multi-objective nature of the task, we design our network with modularized components that are jointly trained in an end-to-end fashion. Fig. 2 shows an overview of our network that includes these modules: • A Document Reader (DR) encodes sentences and fig- ures in a document; • A Progress Tracker (PT) maintains pointers to the in- put (i.e., which section is currently being processed) and the output (i.e., which slide is currently being generated) and determines when to proceed to the next section/slide based on the progress so far; • An Object Placer (OP) decides which object from the current section (sentence or figure) to put on the current 1In this work, figures include images, graphs, charts, and tables. slide. It also predicts the location and the size of each object to be placed on the slide; • A Paraphraser (PAR) takes the selected sentence and rewrites it in a concise form before putting it on a slide. Notation. A document D is organized into sections S = {Si}i∈N in S and figures F = {F in q }q∈M in F . Each section Si contains sentences T in i = {T in i,k}k∈N in i , and each fig- ure Fq = {Iq, Cq} contains an image Iq and a caption Cq. We do not assign figures to any particular section be- cause multiple sections can reference the same figure. A slide deck O = {Oj}j∈N out O contains a number of slides, each containing sentences T out j = {T out j,k }k∈N out j and fig- ures F out j = {F out j,k }k∈M out j . We encode the position and the size of each object on a slide in a bounding box format using an auxiliary layout variable Lj,k, which includes four real-valued numbers {lx, ly, lw, lh} encoding the x-y offsets (top-left corner), the width and height of a bounding box. Model Document Reader (DR). We extract sentence and fig- ure embeddings from an input document and project them to a shared embedding space so that the OP treats both textual and visual elements as an object coming from a joint multimodal distribution. For each section Si, we use RoBERTa (Liu et al. 2019) to encode each of the sentences T in i,k, and then use a bidirectional GRU (Chung et al. 2014) to extract contextualized sentence embeddings Xin i,k: Bin i,k = RoBERTa(T in i,k), Xin i,k = Bi-GRU(Bin i,0, ..., Bin i,N in i −1) k, (1) Similarly, for each figure F in q = {Iin q , Cin q }, we apply ResNet-152 (He et al. 2016) to extract the image embedding of Iin q and RoBERTa for the caption embedding of Cin q . We then concatenate them as the figure embedding V in q : V in q = [ResNet(F in q ), RoBERTa(Cin q )]. (2) Next, we project Xin i,k and V in q to a shared embedding us- ing a two-layer multilayer perceptron (MLP) and combine Etxt i and Efig as the section embedding Esec i of Si: Etxt i,k = MLPtxt(Xin i,k), Efig q = MLPfig(V in q ), Esec i = {Etxt i,k , Efig q }k∈N in i ,q∈M in F (3) We include all figures F in each section embedding Esec i because each section can reference any of the figures. Progress Tracker (PT). We define the PT as a state ma- chine operating in a hierarchically-structured space with sec- tions ([SEC]), slides ([SLIDE]), and objects ([OBJ]). This is to reflect the structure of documents and slides, i.e., each section of a document can have multiple corresponding slides, and each slide can contain multiple objects. The PT maintains pointers to the current section i and the current slide j, and learns a policy to proceed to the next sec- tion/slide as it generates slides. For simplicity, we initialize i = j = 0, i.e., the output slides will follow the natural or- der of sections in an input document. We construct PT as a three-layer hierarchical RNN with (PTsec, PTslide, PTobj), where each RNN encodes the latent space for each level in a section-slide-object hierarchy. This is a natural choice to encode our prior knowledge about the hierarchical structure. First, PTsec takes as input the head-tail contextualized sentence embeddings from the DR, which encodes the over- all information of the current section Si. We use GRU for PTsec and initialize hsec 0 to the contextualized sentence em- beddings of the first section, i.e., hsec 0 = [Xin 0,1, Xin 0,N in 0 −1]: hsec i = PTsec(hsec i−1, [Xin i,1, Xin i,N in i ]), (4) Based on the section state hsec i , PTslide models the section-to-slide relationships: asec j , hslide j = PTslide(asec j−1, hslide j−1 , Esec i ), (5) where hslide 0 = hsec i , Esec i is the section embedding (Eq. 3), and asec j is a binary action variable that tracks the section pointer, i.e, it decides if the model should generate a new slide for the current section Si or proceed to the next section Si+1. We implement PTslide as a GRU and a two-layer MLP with a binary decision head that learns a policy φ to predict asec j = {[NEW SLIDE], [END SEC]}: asec j = MLPslide φ ([hslide j , X r αslide j,r Esec i,r ]), αslide j = softmax(hslide j W (Esec i )⊺). (6) αslide j ∈ RN in i +M in is an attention map over Esec i that com- putes the bilinear compatibility between hslide j and Esec i . Finally, the object PTobj tracks which objects to put on the current slide Oj based on the slide state hslide j : aslide k , hobj k = PTobj(aslide k−1 , hobj k−1, Esec i ), aslide k = MLPobj ψ ([hobj k , X r αobj k,r Esec i,r ]), αobj k = softmax(hobj k W (Esec i )⊺). (7) Similarly, aslide k = {[NEW OBJ], [END SLIDE]} is a bi- nary action variable that decides whether to put a new object for the current slide or proceed to the next. We again set hobj 0 = hslide j and use a GRU and a two-layer MLPψ to im- plement PTobj, together with an attention matrix W between hobj k and Esec i . Note that each of the three PTs have an inde- pendent set of weights to ensure that they model distinctive dynamics in the section-slide-object structure. Object Placer (OP). When PTobj takes an action aslide k = [NEW OBJ], the OP selects an object from the current sec- tion Si and predicts the location on the current slide Oj in which to place it. For this, we use the attention score αobj k to choose an object (sentence or figure) that has the maximum compatibility score with the current object state hobj k , i.e., arg maxr αobj k . We then employ a two-layer MLP to predict the layout variable for the chosen object: {lx k, ly k, lw k , lh k} = MLPlayout([hobj k , X r αobj k,r Esec i,r ]). (8) Note that the distinctive style of presentation slides re- quires special treatment of the objects. If an object is a fig- ure, we take only the image part and resize it to fit the bound- ing box region while maintaining the original aspect ratio. If an object is a sentence, we first paraphrase it into a concise form and also adjust the font size to fit inside. Paraphraser (PAR). We paraphrase sentences before placing them on slides. This step is crucial because with- out it the text would be too verbose for a slide presentation.2 We implement the PAR as Seq2Seq (Bahdanau, Cho, and Bengio 2015) with the copy mechanism (Gu et al. 2016): {w0, ..., wl−1} = PAR(T out j,k , hobj k ), (9) where T out j,k is a sentence chosen by OP. We condition PAR on the object state hobj k to provide contextual information and demonstrate this importance in the supplementary."
+  },
+  {
+   "title": "Training",
+   "page": 4,
+   "text": "We design a learning objective that captures both the structural similarity and the content similarity between the ground-truth slides and the generated slides. Structural similarity. The series of actions asec j and aslide k determines the structure of output slides. To encour- age our model to generate slide decks with a similar struc- ture as the ground-truth, we adopt the the cross-entropy loss (CE) and define our structural similarity loss as: Lstructure = X j CE(asec j ) + X k CE(aslide k ). (10) Content Similarity. We formulate our content similarity loss to capture various aspects of slide generation quality, measuring whether the model 1) selected important sen- tences and figures from the input document, 2) adequately 2In our dataset, sentences in the documents have an average of 17.3 words, while sentences in slides have 11.6 words; the differ- ence is statistically significant (p = 0.0031). phrased sentences in the presentation style (e.g., shorter sen- tences), 3) placed sentences and figures to the right locations on a slide, and 4) put sentences and figures on a slide that are relevant to each other. We define our content similarity loss to measure each of the four aspects described above: Lcontent = X k CE(αobj k ) + X l CE(wl)+ X u,vCE(δ([Etxt u , Efig v ])) + X k MSE(Lk). (11) Selection loss (αobj k ). The first term checks whether it se- lected the “correct” objects that also appear in the ground truth. This term is slide-insensitive, i.e., the correct/incorrect inclusion is not affected by which specific slide it appears in. Paraphrasing loss (wl). The second term measures the quality of paraphrased sentences by comparing the output sentence and the ground-truth sentence word-by-word. Text-Figure matching loss (δ([Etxt u , Efig v ])). The third term measures the relevance of text and figures appearing in the same slide. We follow the literature on visual-semantic embedding (Kiros, Salakhutdinov, and Zemel 2014; Karpa- thy and Fei-Fei 2014) and learn an additional multimodal projection head δ([Etxt u , Efig v ]) with a sigmoid activation that outputs a relevance score in [0, 1]. For positive training pairs, we sample text-figure pairs from a) ground-truth slides and b) paragraph-figure pairs where the figure is mentioned in that paragraph. We randomly construct negative pairs. Layout loss (Lk). The last term measures the quality of slide layout by regressing the predicted bounding box to the ground-truth. While there exist several solutions to bounding box regression (He et al. 2015; Ren et al. 2015), we opted for the simple mean squared error (MSE) computed directly over the layout variable Lk = {lx k, ly k, lw k , lh k}. The Final Loss. We define our final learning objective as: LDOC2P P T = Lstructure + γLcontent (12) where γ controls the relative importance between structural and content similarity; we set γ = 1 in our experiments. To train our model, we follow the standard teacher-forcing approach (Williams and Zipser 1989) for the sequential pre- diction and provide the ground-truth results for the past pre- diction steps, e.g., the next actions asec j and aslide k are based on the ground-truth actions ˜asec j−1 and ˜aslide k−1 , the next object αobj k is selected based on the ground-truth object ˜αobj k−1, etc."
+  },
+  {
+   "title": "Inference",
+   "page": 4,
+   "text": "The inference procedures during training and test times largely follow the same process, with one exception: At test time, we utilize the multimodal projection head δ(·) to act as a post-processing tool. That is, once our model generates a slide deck, we remove figures that have relevance scores lower than a threshold θR and add figures with scores higher than a threshold θA. We tune the two hyper-parameters θR and θA via cross-validation (we set θR = 0.8, θA = 0.9)."
+  },
+  {
+   "title": "Dataset",
+   "page": 4,
+   "text": "We collect pairs of documents and the corresponding slide decks from academic proceedings, focusing on three Document - Slide Documents Slides Train / Val / Test #Sections #Sentences #Figures #Slides #Sentences #Figures CV 2,073 / 265 / 262 15,588 (6.0) 721,048 (46.3) 24,998 (9.6) 37,969 (14.6) 124,924 (8.0) 4,290 (1.7) NLP 741 / 93 / 97 7,743 (8.3) 234,764 (30.3) 8,114 (8.7) 19,333 (20.8) 63,162 (8.2) 3,956 (4.2) ML 1,872 / 234 / 236 17,735 (7.6) 801,754 (45.2) 15,687 (6.7) 41,544 (17.7) 142,698 (8.0) 6,187 (2.6) research communities: computer vision (CVPR, ECCV, BMVC), natural language processing (ACL, NAACL, EMNLP), and machine learning (ICML, NeurIPS, ICLR). For the training and validation set, we automatically ex- tract text and figures from documents and slides and perform matching to create document-to-slide correspondences. To ensure that our test set is clean and reliable, we use Ama- zon Mechanical Turk (AMT) and have humans perform im- age extraction and matching for the entire test set. We pro- vide an overview of our extraction and matching processes; including details of data collection and extraction/matching processes with reliability analyses in the supplementary. Text and Figure Extraction. For each document D, we extract sections S and sentences T in using Scien- ceParse (AllenAI2 2018) and figures F in using PDFFig- ures (Clark and Divvala 2016). For each slide deck O, we extract sentences T out using Azure OCR (Microsoft 2021a) and figures F out using the border following tech- nique (Suzuki and Abe 1985; Intel 2015). Slide Stemming. Many slides are presented with anima- tions, and this makes O contain some successive slides that have similar content minus one element on the preceding slide. For simplicity we consider these near-duplicate slides as redundant and remove them by comparing text and image contents of successive slides: if Oj+1 covers more than 80% of the content of Oj (per text/visual embeddings) we discard it and keep Oj+1 as it is deemed more complete. Slide-Section Matching. We match slides in a deck to the sections in the corresponding document so that a slide deck is represented as a set of non-overlapping slide groups each with a matching section in the document. To this end, we use RoBERTa (Liu et al. 2019) to extract embeddings of the text content in each slide and the paragraphs in each section of the document. We assume that a slide deck follows the sec- tion order of the corresponding document, and use dynamic programming to find slide-to-section matching based on the cosine similarity between text embeddings. Sentence Matching. We match sentences from slides to the corresponding document. We again use RoBERTa to ex- tract embeddings of each sentence in slides and documents, and search for the matching sentence based on the cosine similarity. We limit the search space only within the corre- sponding sections using the slide-section matching result. Figure Matching. Lastly, we match figures from slides to those in the corresponding document. We use Mo- bileNet (Howard et al. 2017) to extract visual embeddings of all Iin and Iout and match them based on the highest co- sine similarity. Note that some figures in slides do not appear in the corresponding document (and hence no match). For simplicity, we discard F out if its highest visual embedding similarity is lower than a threshold θI = 0.8."
+  },
+  {
+   "title": "Experiments",
+   "page": 5,
+   "text": "DOC2PPT is a new task with no established evaluation met- rics and baselines. We propose automatic metrics specifi- cally designed for evaluating slide generation methods. We carefully ablate various components of our approach and evaluate them on our proposed metrics. We also perform hu- man evaluation to assess the generation quality."
+  },
+  {
+   "title": "Evaluation Metrics",
+   "page": 5,
+   "text": "Slide-Level ROUGE (ROUGE-SL). To measure the quality of text in the generated slides, we adapt the widely- used ROUGE score (Lin 2014). Note that ROUGE does not account for the text length in the output, which is problem- atic for presentation slides (e.g., text in slides are usually shorter). Intuitively, the number of slides in a deck is a good proxy for the overall text length. If too short, too much text will be put on the same slide, making it difficult to read; con- versely, if a deck has too many slides, each slide can convey only little information while making the whole presentation lengthy. Therefore, we propose the slide-level ROUGE: ROUGE-SL = ROUGE-L × e |Q− ˜ Q| Q , (13) where Q and ˜Q are the number of slides in the generated and the ground-truth slide decks, respectively. Longest Common Figure Subsequence (LC-FS). We measure the quality of figures in the output slides by con- sidering both the correctness (whether the figures from the ground-truth deck are included) and the order (whether all the figures are ordered logically – i.e, in a similar man- ner to the ground-truth deck). To this end, we use the Longest Common Subsequence (LCS) to compare the list of figures in the output {Iout 0 , Iout 1 , ...} to the ground-truth { ˜Iout 0 , ˜Iout 1 , ...} and report precision/recall/F1. Text-Figure Relevance (TFR). A good slide deck should put text with relevant figures to make the presentation infor- mative and attractive. We consider text and figures simulta- neously and measure their relevance by a modified ROUGE: TFR = 1 M in F XM in F −1 i=0 ROUGE-L(Pi, ˜Pi), (14) where Pi and ˜Pi are sentences from generated and ground- truth slides that contain Iin i , respectively. Ablation Settings ROUGE-SL LC-FS TFR mIoU Hrch-PT PAR TIM Post Proc. Ours w/o SL Prec. Rec. F1 (Layout / Template) (a) \u0017 \u0017 \u0017 \u0017 24.35 29.77 25.54 14.85 18.78 5.61 43.34 / 38.15 (b) \u0013 \u0017 \u0017 \u0017 24.93 29.68 17.48 26.26 20.99 8.58 49.16 / 40.94 (c) \u0013 \u0013 \u0017 \u0017 27.19 32.27 17.48 26.26 20.99 9.23 49.16 / 40.94 (d) \u0013 \u0017 \u0013 \u0017 26.52 30.99 23.47 25.31 24.36 10.09 50.82 / 42.96 (e) \u0013 \u0013 \u0013 \u0017 29.40 34.27 23.47 25.31 24.36 11.82 50.82 / 42.96 Train ↓ / Test → CV NLP ML All CV 31.2 / 32.1 / 19.7 24.1 / 21.5 / 5.6 24.0 / 25.6 / 11.2 24.7 / 29.2 / 15.8 NLP 28.8 / 30.0 / 13.4 34.7 / 30.7 / 11.8 29.2 / 32.7 / 15.3 28.9 / 30.9 / 13.6 ML 21.1 / 29.2 / 11.6 21.1 / 26.6 / 6.6 32.1 / 36.8 / 22.8 24.9 / 31.4 / 14.4 All 29.2 / 31.2 / 18.6 30.0 / 28.8 / 9.7 29.4 / 32.9 / 20.6 29.4 / 31.3 / 17.5 Mean Intersection over Union (mIoU). A good design layout makes it easy to consume information presented in slides. To evaluate the layout quality, we adapt the mean in- tersection over union (mIoU) (Everingham et al. 2010) by incorporating the LCS idea with the ground-truth ˜O: mIoU(O, ˜O) = 1 N out O XN out O −1 i=0 IoU(Oi, ˜OJi) (15) where IoU(Oi, ˜Oj) computes the IoU between a set of pre- dicted bounding boxes from slide i and a set of ground-truth bounding boxes from slide and Ji. To account for a potential structural mismatch (with missing/extra slides), we find the J = {j0, j1, ..., jN out O −1} that achieves the maximum mIoU between O and ˜O in an increasing order."
+  },
+  {
+   "title": "Implementation Detail",
+   "page": 6,
+   "text": "For the DR, we use a Bi-GRU with 1,024 hidden units and set the MLPs to output 1,024-dimensional embeddings. Each layer of the PT is based on a 256-unit GRU. The PAR is designed as Seq2Seq (Bahdanau, Cho, and Bengio 2015) with 512-unit GRU. All the MLPs are two-layer fully- connected networks. We train our network end-to-end using ADAM (Diederik P. Kingma 2014) withlearning rate 3e-4."
+  },
+  {
+   "title": "Results and Discussions",
+   "page": 6,
+   "text": "Is the Hierarchical Modeling Effective? We define a “flattened” version of our PT (flat-PT) by replacing the hier- archical RNN with a vanilla RNN that learns a single shared latent space to model the section-slide-object structure. The flat-PT contains a single GRU and a two-layer MLP with a ternary decision head that learns to predict an action at = {[NEW SECTION], [NEW SLIDE], [NEW OBJ]}. For a fair comparison, we increase the number of hidden units in the baseline GRU to 512 (ours is 256) so the model capaci- ties are roughly the same between the two. First, we compare the structural similarity between the generated and the ground-truth slide decks. For this, we build a list of tokens indicating a section-slide-object struc- ture (e.g., [SEC], [SLIDE], [OBJ], ..., [SLIDE], ...) and compare the lists using the LCS. Our hierarchical ap- proach achieves 64.15% vs. the flat-PT 51.72%, suggesting that ours was able to learn the structure better than baseline. A Deeper Look into the Content Similarity Loss. We ablate different terms in the content similarity loss (Eq. 11) to understand their individual effectiveness in Table 2. PAR. The paraphrasing loss improves text quality in slides; see the ROUGE-SL scores of (b) vs. (c), and (d) vs. (e). It also improves the TFR metric because any improve- ment in text quality will benefit text-figure relevance. TIM. The text-figure matching loss improves the figure quality; see (b) vs. (d) and (c) vs. (e). It particularly im- proves LC-FS precision with a moderate drop in recall rate, indicating the model added more correct figures. TIM also improves ROUGE-SL because it helps constrain the multi- modal embedding space, resulting in better selection of text. Figure Post-Processing. At test time, we leverage the multimodal projection head δ(·) as a post-processing mod- ule to add missing figures and/or remove unnecessary ones. Layout Prediction vs. Template. The OP predicts the lay- out to decide where and how to put the extracted objects. We compare this with a template-based approach, which selects the current section title as the slide title and puts sentences and figures in the body line-by-line. For those extracted fig- ures, they will equally fit (with the same width) in the re- And how well the generated text matches the figures in the ground-truth slides. Error bars reflect standard error. Signif- icance tests: two-sample t-test (p <0.05.) maining space under the main content. The result shows that the predicted-based layout, which directly learns from the layout loss, can bring out higher mIoU with the groundtruth. And in the aspect of the visualization, the template-based design can make the generated slide deck more consistent. Topic-Aware Evaluation. We evaluate performance in a topic-dependent and independent fashion. To do this, we train and test our model on data from each of the three research communities (CV, NLP, and ML). Table 3 shows that models trained and tested within each topic performs the best (not surprisingly), and that models trained on data from all topics achieves the second best performance, show- ing generalization to different topic areas. Training on NLP data, despite being the smallest among the three, seems to generalize well to other topics on the text metric, achieving the second best on ROUGE-SL (28.9). Training on CV data provides the second highest performance on the text-figure metric TFR (15.8), and training on ML achieves the highest figure extraction performance (LC-FS F1 of 31.4). Human Evaluation. We conduct a user study to assess the perceived quality of generates slides. To make the task easy to complete, we sample 200 sections from 50 documents and create 600 pairs of ground-truth and generate slides. We pre- pare four slide decks per document: the ground-truth deck, and the ones generated by the flat PT (Table 2 (a)), by ours without PAR and TIM (b), and by our final model (f). We recruited three AMT Master Workers for each task (HIT). The workers were shown the slides from the ground- truth deck (DECK A) and one of the methods (DECK B). The workers were then asked to answer three questions: Q1. Looking only at the TEXT on the slides, how similar is the content on the slides in DECK A to the content on the slides in DECK B?; Q2. How well do the figure(s)/tables(s) in DECK A match the text or figures/tables in DECK B?; Q3. How well do the figure(s)/table(s) in DECK A match the TEXT in DECK B? The responses were all on a scale of 1 (not similar at all) to 7 (very similar). Fig. 4 shows the average scores for each method. The average rating for our approach was significantly greater for all three questions compared to the other two methods. There was no significant difference between the ratings for the other two methods. Qualitative Results."
+  },
+  {
+   "title": "Conclusion",
+   "page": 7,
+   "text": "We present a novel task and approach for generating slides from documents. This is a challenging multimodal task that involves understanding and summarizing documents con- taining text and figures and structuring it into a presentation form. We release a large set of 5,873 paired documents and slide decks, and provide evaluation metrics with our results. We hope our work will help advance the state-of-the-art in vision-and-language understanding."
+  }
+ ],
+ "captions": 25,
+ "figures": [
+  {
+   "caption": "Figure 1: We introduce DOC2PPT, a novel task of gener- ating a slide deck from a document. This requires solving several challenges in the vision-and-language domain, e.g., visual-semantic embedding and multimodal summarization. In addition, slides exhibit unique properties such as concise text (bullet points) and stylized layout.",
+   "page": "1",
+   "image": "build/figures/DOC2PPT_2101.11796/p01_01_figure.png",
+   "bbox": [
+    339.9,
+    167.0,
+    537.6,
+    386.5
+   ],
+   "area": 43391
+  },
+  {
+   "caption": "Figure 2: An overview of our architecture. It consists of modules (DR, PT, OP, PAR) that read a document and gen- erate a slide deck in a hierarchically structured manner.",
+   "page": "3",
+   "image": "build/figures/DOC2PPT_2101.11796/p03_01_figure.png",
+   "bbox": [
+    62.2,
+    50.0,
+    284.3,
+    269.8
+   ],
+   "area": 48818
+  },
+  {
+   "caption": "Figure 3: Qualitative examples of the generated slide deck from our model (Paper source: top (Izmailov et al. 2020) and bottom (Chen et al. 2020)). We provide more results on our project webpage: https://doc2ppt.github.io",
+   "page": "7",
+   "image": "build/figures/DOC2PPT_2101.11796/p07_01_figure.png",
+   "bbox": [
+    74.8,
+    51.1,
+    534.3,
+    261.5
+   ],
+   "area": 96678
+  },
+  {
+   "caption": "Figure 4: The average scores for how closely the generated slides match the text and figures in the ground-truth slides. And how well the generated text matches the figures in the ground-truth slides. Error bars reflect standard error. Signif- icance tests: two-sample t-test (p <0.05.)",
+   "page": "7",
+   "image": "build/figures/DOC2PPT_2101.11796/p07_02_figure.png",
+   "bbox": [
+    61.9,
+    281.1,
+    281.4,
+    390.7
+   ],
+   "area": 24051
+  },
+  {
+   "caption": "Figure 5: Data processing pipeline. We automatically extract text/figures and match them between documents and slide decks.",
+   "page": "8",
+   "image": "build/figures/DOC2PPT_2101.11796/p08_01_figure.png",
+   "bbox": [
+    63.0,
+    126.4,
+    546.5,
+    287.6
+   ],
+   "area": 77946
+  },
+  {
+   "caption": "Figure 9: Figure Matching. The lower figures are those matched from the paper using the cosine similarity and features from MobileNet (Howard et al. 2017).",
+   "page": "9",
+   "image": "build/figures/DOC2PPT_2101.11796/p09_03_figure.png",
+   "bbox": [
+    67.9,
+    391.1,
+    300.2,
+    512.6
+   ],
+   "area": 28215
+  },
+  {
+   "caption": "Figure 10: Figure Matching under Different θI. Preci- sion, recall, and F1 are evaluated using the human-labeled testing set.",
+   "page": "9",
+   "image": "build/figures/DOC2PPT_2101.11796/p09_04_figure.png",
+   "bbox": [
+    309.3,
+    405.1,
+    541.2,
+    512.7
+   ],
+   "area": 24960
+  },
+  {
+   "caption": "Figure 12: Interface of Figure Matching Labeling. The an- notator label figures either as match or as similar but not exact match.",
+   "page": "10",
+   "image": "build/figures/DOC2PPT_2101.11796/p10_01_figure.png",
+   "bbox": [
+    71.9,
+    116.9,
+    321.1,
+    256.0
+   ],
+   "area": 34657
+  },
+  {
+   "caption": "Figure 13: Interface of Bounding Box Labeling. The annotator is asked to draw a bounding box around the region of the slide where the candidate figure appeared.",
+   "page": "10",
+   "image": "build/figures/DOC2PPT_2101.11796/p10_02_figure.png",
+   "bbox": [
+    328.4,
+    129.8,
+    537.6,
+    253.1
+   ],
+   "area": 25787
+  },
+  {
+   "caption": "Figure 14: Post-Processing under different θR and θA. We tune the θR and θA for the post-processing based on the LC-F1 on the validation set.",
+   "page": "10",
+   "image": "build/figures/DOC2PPT_2101.11796/p10_04_figure.png",
+   "bbox": [
+    263.7,
+    418.9,
+    567.1,
+    519.7
+   ],
+   "area": 30587
+  },
+  {
+   "caption": "Figure 16: Interface of Human Evaluation. The annotator is asked three questions on aspects of the text quality, the figure extraction, and the text- figure relevance.",
+   "page": "11",
+   "image": "build/figures/DOC2PPT_2101.11796/p11_02_figure.png",
+   "bbox": [
+    66.5,
+    51.4,
+    276.1,
+    410.4
+   ],
+   "area": 75233
+  },
+  {
+   "caption": "Figure 17: Applying PowerPoint Design Ideas. By applying the design ideas feature (Microsoft 2021b) provided from Mi- crosoft PowerPoint, we can make the generated template-based slide deck more professional and more attractive for the presen- tation.",
+   "page": "11",
+   "image": "build/figures/DOC2PPT_2101.11796/p11_03_figure.png",
+   "bbox": [
+    283.0,
+    54.0,
+    543.0,
+    413.2
+   ],
+   "area": 93412
+  },
+  {
+   "caption": "Figure 18: Qualitative examples. (from top to bottom: (Luo et al. 2020), (Liu et al. 2020), (Dai et al. 2020), (Jang et al. 2019), and (Chaudhary, Sch¨utze, and Gupta 2020)) Please visit https://doc2ppt.github.io for more generated slide decks.",
+   "page": "12",
+   "image": "build/figures/DOC2PPT_2101.11796/p12_01_figure.png",
+   "bbox": [
+    52.5,
+    53.2,
+    558.8,
+    694.6
+   ],
+   "area": 324674
+  }
+ ]
+}

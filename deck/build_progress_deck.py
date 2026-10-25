@@ -428,8 +428,52 @@ def slide_measure(prs):
     return s
 
 
+def slide_space(prs):
+    s = page(prs, "scope", "Sixty-five things you could measure. Six are worth it", 9)
+    rows = [["A  layout geometry", "14"], ["B  typography", "15"],
+            ["C  colour and contrast", "7"], ["D  content and meaning", "12"],
+            ["E  structure", "8"], ["F  rendering", "5"], ["G  audience", "4"],
+            ["total", "65"]]
+    t = table(s, ["candidate", "n"], rows, 0.95, 1.85, 3.9, [2.9, 1.0],
+              size=9.5, head=9, row_h=0.34)
+    for r in range(1, len(rows) + 1):
+        if rows[r - 1][0] == "total":
+            c0, c1 = t.cell(r, 0), t.cell(r, 1)
+            c0.text_frame.clear()
+            c1.text_frame.clear()
+            write(c0.text_frame, "total", 9.5, INK, True, first=True)
+            write(c1.text_frame, "65", 9.5, GOLD, True, first=True)
+
+    tf = tb(s, 5.25, 1.85, 3.1, 0.35)
+    write(tf, "Five tests", 11, INK, True, first=True)
+    tests = ["decidable without a reference",
+             "deterministic: same file, same number",
+             "a violation is worse, not different",
+             "cheap enough to run in the loop",
+             "explainable: shape, value, threshold"]
+    tf = tb(s, 5.25, 2.25, 3.15, 2.4)
+    for i, item in enumerate(tests):
+        write(tf, "-  " + item, 9, INK2, first=(i == 0), space=0 if i == 0 else 7,
+              line=1.2)
+
+    tf = tb(s, 8.65, 1.85, 3.75, 0.35)
+    write(tf, "What survives", 11, INK, True, first=True)
+    rows2 = [["G1 containment", "A1"], ["G2 overlap", "A2"], ["G3 font size", "B1"],
+             ["G4 contrast", "C1"], ["G5 text fit", "B7"], ["G6 density", "B5+B6"]]
+    table(s, ["gate", "from"], rows2, 8.65, 2.25, 3.75, [2.85, 0.9],
+          size=9.5, head=9, row_h=0.33)
+
+    rect(s, 0.95, 5.55, 11.9, 1.15, fill=PANEL2)
+    rect(s, 0.95, 5.55, 0.07, 1.15, fill=RED)
+    tf = tb(s, 1.28, 5.70, 11.3, 0.9)
+    write(tf, "And what it cannot see: a bullet can be grammatical, the right length, "
+              "the right size - and still nonsense. That is the boundary of a mechanical "
+              "metric, and it belongs to the human study.", 11, INK, first=True, line=1.3)
+    return s
+
+
 def slide_results(prs):
-    s = page(prs, "results so far", "Every generated slide fails at least one gate", 9)
+    s = page(prs, "results so far", "Every generated slide fails at least one gate", 10)
     img = IMG / "slide02.png"
     if img.exists():
         s.shapes.add_picture(str(img), Inches(0.95), Inches(1.80), width=Inches(6.85))
@@ -454,7 +498,7 @@ def slide_results(prs):
 
 
 def slide_console(prs):
-    s = page(prs, "the run", "It runs end to end, and it fails honestly", 10)
+    s = page(prs, "the run", "It runs end to end, and it fails honestly", 11)
     img = IMG / "console_run.png"
     if img.exists():
         s.shapes.add_picture(str(img), Inches(0.95), Inches(1.80), width=Inches(8.30))
@@ -478,7 +522,7 @@ def slide_console(prs):
 
 
 def slide_status(prs):
-    s = page(prs, "status", "What is built, what is next", 11)
+    s = page(prs, "status", "What is built, what is next", 12)
     groups = [
         ("Built and tested", GREEN, ["parse: sections, figures, captions",
                                      "figure clipping, 12/32 on the sample",
@@ -511,7 +555,7 @@ def slide_status(prs):
 
 
 def slide_plan(prs):
-    s = page(prs, "plan", "The experiment, and the calendar", 12)
+    s = page(prs, "plan", "The experiment, and the calendar", 13)
     # 2x2
     tf = tb(s, 0.95, 1.80, 5.6, 0.35)
     write(tf, "The design: a 2 x 2 factor", 12.5, INK, True, first=True)
@@ -541,7 +585,7 @@ def slide_plan(prs):
 
 
 def slide_asks(prs):
-    s = page(prs, "what I need from you", "Three decisions and one question", 13)
+    s = page(prs, "what I need from you", "Three decisions and one question", 14)
     items = [
         ("1", "Human decks", "Where can I get decks an author actually presented? "
                              "They are the upper bound in the validity check, and I have none."),
@@ -578,6 +622,7 @@ def main():
     slide_parse(prs)
     slide_select(prs)
     slide_measure(prs)
+    slide_space(prs)
     slide_results(prs)
     slide_console(prs)
     slide_status(prs)
