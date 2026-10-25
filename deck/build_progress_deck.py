@@ -404,6 +404,7 @@ def slide_measure(prs):
               [1.9, 3.3, 1.2, 1.2], size=10, head=10, row_h=0.42)
     for r in range(1, len(rows) + 1):
         cell = t.cell(r, 3)
+        cell.text_frame.clear()          # table() already wrote it; colour it once
         state = rows[r - 1][3]
         write(cell.text_frame, state, 10, GREEN if state == "built" else
               (AMBER if "global" in state else RED), True, first=True)
@@ -470,7 +471,7 @@ def slide_status(prs):
     ]
     x = 0.95
     for title, colour, items in groups:
-        rect(s, x, 1.85, 3.85, 4.05, fill=PANEL)
+        rect(s, x, 1.85, 3.85, 3.20, fill=PANEL)
         rect(s, x, 1.85, 3.85, 0.055, fill=colour)
         tf = tb(s, x + 0.25, 2.05, 3.4, 0.35)
         write(tf, title, 12.5, INK, True, first=True)
@@ -479,7 +480,7 @@ def slide_status(prs):
             write(tf, "-  " + item, 9.5, INK2, first=(i == 0), space=0 if i == 0 else 7,
                   line=1.25)
         x += 4.03
-    tf = tb(s, 0.95, 6.15, 11.9, 0.6)
+    tf = tb(s, 0.95, 5.40, 11.9, 0.6)
     write(tf, "76 test cases pass. The deck above was produced by this pipeline end to end.",
           10.5, GREY, first=True, italic=True)
     return s
