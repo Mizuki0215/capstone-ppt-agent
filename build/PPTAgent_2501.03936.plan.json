@@ -19,9 +19,9 @@
      67.2,
      66.9,
      526.6,
-     298.2
+     298.3
     ],
-    "area": 106256
+    "area": 106310
    },
    "seconds": 90,
    "notes": "This slide covers abstract. Open with: Automatically generating presentations from documents is a challenging task that requires accommodating content quality .... Then move to: To address these limitations, we propose PPTAGENT, which comprehensively improves presentation generation through a .... Target roughly 90 seconds here."
@@ -29,26 +29,40 @@
   {
    "title": "Introduction",
    "bullets": [
-    "Slide Clustering Bullets: few bullet points Opening: title and icon Display: landscape painting 2",
-    "Specifically, the generated editing actions are executed within a REPL1 environment",
     "An overview of our workflow is illustrated in Figure 2",
-    "Outline Generation Stage \u2160: Presentation Analysis Reference Presentation 1",
     "As shown in Figure 2, we first analyze and cluster reference slides into categories ...",
-    "Results demonstrate that PPTAGENT generates high-quality presentations, achieving an average score of 3.67 for ..."
+    "Results demonstrate that PPTAGENT generates high-quality presentations, achieving an average score of 3.67 for ...",
+    "The conventional method for creating each slide S is formalized in Equation 1",
+    "However, creating high-quality presentations requires a captivating storyline, well-designed layouts, and rich, compelling content",
+    "However, achieving such an edit-based approach for presentation generation is challenging"
    ],
    "source_page": 1,
    "seconds": 90,
-   "notes": "This slide covers introduction. Open with: Slide Clustering Bullets: few bullet points Opening: title and icon Display: landscape painting 2. Then move to: Specifically, the generated editing actions are executed within a REPL1 environment. Target roughly 90 seconds here."
+   "notes": "This slide covers introduction. Open with: An overview of our workflow is illustrated in Figure 2. Then move to: As shown in Figure 2, we first analyze and cluster reference slides into categories .... Target roughly 90 seconds here."
   },
   {
-   "title": "Evaluation Target",
+   "title": "Data",
    "bullets": [
-    "Table 1: The scoring criteria of dimensions in PPTE- VAL, all evaluated in 1-5 ...",
-    "The complete evaluation process is illustrated in Figure 3, with detailed scoring criteria and ...",
-    "Dimension Criteria Content Text should be concise and grammatically sound, supported by relevant images",
-    "Design Harmonious colors and proper layout ensure readability, while visual elements like geometric shapes ...",
-    "Coherence Structure develops progressively, incorporating essential background information",
-    "Coherence: 4 Minor flaws presented in the logical structure Logical Structure Slide-1: Describe xx ..."
+    "Specifically, the generated editing actions are executed within a REPL1 environment",
+    "Outline Generation As shown in Figure 2, we utilize LLM to generate a structured ...",
+    "When actions fail to apply to reference slides, the REPL provides execution feedback2 to ...",
+    "Grounded in established presentation design principles , our evaluation framework focuses on three key ...",
+    "The framework provides both numeric scores (1-to-5 scale) and detailed rationales to justify each ...",
+    "Furthermore, to enhance robustness during the editing process, we implement a self-correction mechanism"
+   ],
+   "source_page": 3,
+   "seconds": 90,
+   "notes": "This slide covers data. Open with: Specifically, the generated editing actions are executed within a REPL1 environment. Then move to: Outline Generation As shown in Figure 2, we utilize LLM to generate a structured .... Target roughly 90 seconds here."
+  },
+  {
+   "title": "Dataset",
+   "bullets": [
+    "We have curated 10,448 presentations from this source and made them publicly available to ...",
+    "The sampling criteria and preprocessing details are provided in Appendix A, while the dataset ...",
+    "In addition, we collected 50 documents from the same domains to be used as ...",
+    "Additionally, these datasets primarily consist of academic presentations in artificial intelligence, limiting their diversity",
+    "Existing presentation datasets, such as Fu et al",
+    "To address these limitations, we introduce Zenodo10K, a new dataset sourced from Zenodo  ..."
    ],
    "source_page": 4,
    "figure": {
@@ -57,28 +71,28 @@
     "image": "build/figures/PPTAgent_2501.03936/p04_01_figure.png",
     "bbox": [
      303.6,
-     68.3,
+     68.4,
      528.1,
-     183.5
+     183.6
     ],
-    "area": 25852
+    "area": 25872
    },
    "seconds": 90,
-   "notes": "This slide covers evaluation target. Open with: Table 1: The scoring criteria of dimensions in PPTE- VAL, all evaluated in 1-5 .... Then move to: The complete evaluation process is illustrated in Figure 3, with detailed scoring criteria and .... Target roughly 90 seconds here."
+   "notes": "This slide covers dataset. Open with: We have curated 10,448 presentations from this source and made them publicly available to .... Then move to: The sampling criteria and preprocessing details are provided in Appendix A, while the dataset .... Target roughly 90 seconds here."
   },
   {
-   "title": "Experiment",
+   "title": "Implementation Details",
    "bullets": [
+    "PPTAGENT is implemented with three models: GPT-4o-2024-08-06 (GPT-4o), Qwen2.5-72B- Instruct , and Qwen2- VL-72B-Instruct",
     "All open-source LLMs are deployed using the VLLM framework on NVIDIA A100 GPUs",
     "Each configuration generates 50 presentations (5 domains \u00d7 10 input documents), as they do ...",
     "Specifically, we define configurations as combinations of a language model (LM) and a vision ...",
-    "We have curated 10,448 presentations from this source and made them publicly available to ...",
     "The total computational cost for experiments are approximately 500 GPU hours",
-    "In addition, we collected 50 documents from the same domains to be used as ..."
+    "Each slide generation allows a maximum of two self-correction iterations"
    ],
-   "source_page": 4,
+   "source_page": 5,
    "seconds": 90,
-   "notes": "This slide covers experiment. Open with: All open-source LLMs are deployed using the VLLM framework on NVIDIA A100 GPUs. Then move to: Each configuration generates 50 presentations (5 domains \u00d7 10 input documents), as they do .... Target roughly 90 seconds here."
+   "notes": "This slide covers implementation details. Open with: PPTAGENT is implemented with three models: GPT-4o-2024-08-06 (GPT-4o), Qwen2.5-72B- Instruct , and Qwen2- VL-72B-Instruct. Then move to: All open-source LLMs are deployed using the VLLM framework on NVIDIA A100 GPUs. Target roughly 90 seconds here."
   },
   {
    "title": "Evaluation Metrics",
@@ -97,16 +111,16 @@
   {
    "title": "Analysis",
    "bullets": [
-    "PPTAgent (a) DocPres KCTV PPTAgent (b) Figure 5: Comparative analysis of presentation generation across ...",
-    "Although GPT-4o exhibits superior self-correction capabilities compared to Qwen2.5, Qwen2.5 encounters fewer errors in ...",
     "Table 5 shows the correlation of ratings between humans and LLMs",
-    "All presented data of similarity exhibit a p-value below 0.05, indicating a statistically significant ...",
+    "Pearson 0.70 0.90 0.55 0.71 Spearman 0.73 0.88 0.57 0.74 tions, leading to outputs ...",
     "All experiments were conducted using the Qwen2.5LM+Qwen2-VLVM configuration",
-    "Additionally, we observed that Qwen2-VL experiences errors more frequently and has poorer self-correction capabilities ..."
+    "The average Pearson correlation of 0.71 exceeds the scores of other evaluation methods  ...",
+    "However, their dependence on extensive manual effort for template annotation significantly limits scalability and ...",
+    "However, they did not evaluate presentation quality from a holistic perspective"
    ],
    "source_page": 6,
    "seconds": 90,
-   "notes": "This slide covers analysis. Open with: PPTAgent (a) DocPres KCTV PPTAgent (b) Figure 5: Comparative analysis of presentation generation across .... Then move to: Although GPT-4o exhibits superior self-correction capabilities compared to Qwen2.5, Qwen2.5 encounters fewer errors in .... Target roughly 90 seconds here."
+   "notes": "This slide covers analysis. Open with: Table 5 shows the correlation of ratings between humans and LLMs. Then move to: Pearson 0.70 0.90 0.55 0.71 Spearman 0.73 0.88 0.57 0.74 tions, leading to outputs .... Target roughly 90 seconds here."
   },
   {
    "title": "Conclusion",
@@ -119,20 +133,6 @@
    "source_page": 8,
    "seconds": 90,
    "notes": "This slide covers conclusion. Open with: Our experiments across data from multiple domains have demonstrated the superiority of our method. Then move to: Moreover, we propose PPTEVAL to provide quantitative metrics for assessing presentation quality. Target roughly 90 seconds here."
-  },
-  {
-   "title": "Limitations",
-   "bullets": [
-    "While PPTAGENT demonstrates promising capabilities in presentation generation, several limitations remain",
-    "First, despite achieving a high success rate (>95%) on our dataset, the model occasionally ...",
-    "This manifests in occasional design flaws, such as overlapping elements, which can compromise the ...",
-    "Ethical Considerations In the construction of Zenodo10K, we utilized the publicly available API to ...",
-    "Future work should focus on enhancing the robustness, reducing reference dependency, and better incorporating ...",
-    "Third, although PPTAGENT shows improvements in layout optimization compared to prior approaches, it does ..."
-   ],
-   "source_page": 9,
-   "seconds": 90,
-   "notes": "This slide covers limitations. Open with: While PPTAGENT demonstrates promising capabilities in presentation generation, several limitations remain. Then move to: First, despite achieving a high success rate (>95%) on our dataset, the model occasionally .... Target roughly 90 seconds here."
   }
  ]
 }

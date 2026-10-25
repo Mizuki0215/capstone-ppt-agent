@@ -43,44 +43,55 @@ def log_lines(path):
     return [ln.rstrip() for ln in path.read_text().splitlines()]
 
 
-def need(lines, fragment):
-    for ln in lines:
-        if fragment in ln:
-            return ln[:116]
-    raise SystemExit(f"line not found in log: {fragment!r}")
+def pick(lines, prefix=None, contains=None, nth=0):
+    """Return the nth log line matching, or fail - never invent a line."""
+    hits = [ln for ln in lines
+            if (prefix is None or ln.startswith(prefix))
+            and (contains is None or contains in ln)]
+    if len(hits) <= nth:
+        raise SystemExit(f"no line matching prefix={prefix!r} contains={contains!r}")
+    return hits[nth][:116]
 
 
 def main():
     run = log_lines(RUN)
     det = log_lines(DETECT)
 
+    pytest_line = "see log"
+    plog = Path("/tmp/pytest.log")
+    if plog.exists():
+        for ln in plog.read_text().splitlines():
+            if "passed" in ln or "failed" in ln:
+                pytest_line = ln.strip()
+                break
+    sec_rows = [ln[:116] for ln in run if ln.startswith("  p")]
     body = [
         ("%  ./run.sh " + RUN_SCRIPT, GREEN),
-        (need(run, "[1/3] parse"), INK),
-        (need(run, "sections=8"), INK),
-        (need(run, "p1   Abstract"), INK),
-        (need(run, "p2   Approach"), INK),
+        (pick(run, prefix="[1/3]"), INK),
+        (pick(run, contains="sections="), INK),
+        (sec_rows[0], INK),
+        (sec_rows[1], INK),
         ("   ...", GREY),
-        (need(run, "p7   Conclusion"), INK),
-        (need(run, "[2/3] compose"), INK),
-        (need(run, "slides=8"), INK),
-        ("    " + need(run, "bullets=6 90s").strip(), INK),
-        (need(run, "[3/3] render"), INK),
-        (need(run, "slides=9"), INK),
-        (need(run, "done ->"), INK),
+        (sec_rows[-1], INK),                            # first two and the last
+        (pick(run, prefix="[2/3]"), INK),
+        (pick(run, contains="slides="), INK),
+        ("    " + pick(run, contains="bullets=").strip(), INK),
+        (pick(run, prefix="[3/3]"), INK),
+        (pick(run, contains="slides=", nth=1), INK),
+        (pick(run, prefix="done ->"), INK),
         ("", INK),
         ("%  python3 src/detect.py " + DECK, GREEN),
-        (need(det, DECK), INK),
-        (need(det, "slides=9"), INK),
-        (need(det, "violations=32"), INK),
-        ("    " + need(det, "p1<G3>").strip(), YELLOW),
-        ("    " + need(det, "p2<G3> TextBox 6").strip(), RED),
-        ("    " + need(det, "p2<G6> 783").strip(), RED),
+        (pick(det, contains=DECK), INK),
+        (pick(det, contains="slides="), INK),
+        (pick(det, contains="violations="), INK),
+        ("    " + pick(det, contains="<G3>").strip(), YELLOW),
+        ("    " + pick(det, contains="<G3>", nth=1).strip(), RED),
+        ("    " + pick(det, contains="<G6>").strip(), RED),
         ("    ...", GREY),
         ("", INK),
         ("%  python3 -m pytest", GREEN),
         ("." * 70 + "  [100%]", GREY),
-        ("76 passed in 3.4s", INK),
+        (pytest_line[:116], INK),
     ]
 
     height = 0.62 + LINE * len(body)

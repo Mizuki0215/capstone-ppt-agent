@@ -460,15 +460,15 @@ def slide_results(prs):
     if img.exists():
         s.shapes.add_picture(str(img), Inches(0.95), Inches(1.80), width=Inches(6.85))
         tf = tb(s, 0.95, 5.75, 6.85, 0.5)
-        write(tf, "生成的 deck 第 2 頁：圖已放入，圖說在下面", 8.5, GREY,
+        write(tf, "這條 pipeline 生成的 PPTAgent deck，第 2 頁", 8.5, GREY,
               first=True, italic=True)
     rows = [
-        ["頁數", "9", "9"],
+        ["頁數", "9", "12"],
         ["合格頁", "0", "0"],
         ["SRR（頁面級）", "0.00", "0.00"],
-        ["違規數", "33", "32"],
-        ["G3 違規頁", "9 / 9", "9 / 9"],
-        ["G6 違規頁", "8 / 9", "8 / 9"],
+        ["違規數", "33", "40"],
+        ["G3 違規頁", "9 / 9", "12 / 12"],
+        ["G6 違規頁", "8 / 9", "11 / 12"],
     ]
     table(s, ["", "PPTAgent", "DOC2PPT"], rows, 8.15, 1.82, 4.55,
           [2.05, 1.25, 1.25], size=10, head=9.5, row_h=0.33)
@@ -478,17 +478,17 @@ def slide_results(prs):
 
 
 def slide_console(prs):
-    s = page(prs, "實際執行", "整條 pipeline 跑得完，而且會老實地報錯", 11)
+    s = page(prs, "實際執行", "整條 pipeline 跑得完 —— 而且它報出 40 個真問題", 11)
     img = IMG / "console_run.png"
     if img.exists():
         s.shapes.add_picture(str(img), Inches(0.95), Inches(1.80), width=Inches(8.30))
         tf = tb(s, 0.95, 7.06, 8.3, 0.3)
         write(tf, "真實終端輸出；中間幾行省略。", 8, GREY, first=True, italic=True)
     notes = [
-        ("parse", "8 個章節、24 個圖說、裁出 11 張圖"),
-        ("compose", "8 張 slide，每張 90 秒"),
-        ("render", "9 頁 deck，原生可編輯"),
-        ("detect", "32 個違規，SRR 0.00"),
+        ("parse", "12 個章節、25 個圖說、裁出 13 張圖"),
+        ("compose", "11 張 slide，每張約 65 秒"),
+        ("render", "12 頁 deck，原生可編輯"),
+        ("detect", "40 個違規，SRR 0.00"),
         ("pytest", "76 個測試全綠"),
     ]
     y = 1.90
@@ -504,7 +504,7 @@ def slide_status(prs):
     s = page(prs, "狀態", "做好了什麼，下一步是什麼", 12)
     groups = [
         ("已做好並有測試", GREEN, ["parse：章節、圖、圖說",
-                                     "裁圖：樣本上 32 個圖說成功 12 個",
+                                     "裁圖：25 個圖說裁出 13 張",
                                      "render：原生 .pptx 連講稿",
                                      "G1、G2、G3、G6 + SRR",
                                      "選段規則表，55 個測試函數"]),
